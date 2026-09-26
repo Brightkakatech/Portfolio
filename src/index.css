@@ -190,6 +190,53 @@ h1 {
   color: var(--accent);
 }
 
+/* ===== Shared page intro text ===== */
+.page-intro {
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+/* ===== Education page ===== */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.edu-card {
+  background: #ffffff;
+  border-left: 4px solid var(--accent);   /* gold stripe on the left */
+  border-radius: 0 8px 8px 0;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.edu-years {
+  display: inline-block;
+  background: var(--primary);
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.edu-card h2 {
+  color: var(--primary);
+  font-size: 1.2rem;
+  line-height: 1.3;
+}
+
+.edu-institution {
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+.edu-details {
+  padding-left: 1.25rem;    /* indent the bullet points */
+}
+
 /* ===== Phones and small screens ===== */
 @media (max-width: 700px) {
   .navbar {
