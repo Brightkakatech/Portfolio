@@ -1,6 +1,6 @@
 /* ===== Colour palette – navy and gold ===== */
 :root {
-  --primary: #1b2a49;      /* navy: navbar, headings */
+  --primary: #1b2a49;      /* navy: navbar, headings, footer */
   --accent: #c9a227;       /* gold: active link */
   --accent-text: #1b2a49;  /* navy text on gold, for readability */
   --nav-text: #d7dcea;     /* soft white for inactive links */
@@ -23,10 +23,18 @@ body {
   line-height: 1.6;
 }
 
+/* ===== Overall page layout ===== */
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;        /* the site is always at least one screen tall */
+}
+
 /* ===== Navigation bar ===== */
 .navbar {
   position: sticky;          /* stays at the top when scrolling */
   top: 0;
+  z-index: 10;               /* keeps the navbar above page content */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -70,6 +78,10 @@ body {
 
 /* ===== Page content area ===== */
 main {
+  flex: 1;                   /* takes up all space between navbar and footer */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   max-width: 1000px;
   margin: 0 auto;
   padding: 2.5rem 1.5rem;
@@ -78,6 +90,104 @@ main {
 h1 {
   color: var(--primary);
   margin-bottom: 1rem;
+}
+
+/* ===== Home page (hero section) ===== */
+.hero {
+  flex: 1;                   /* fills the whole content area */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 3rem 1rem 0;
+}
+
+.hero-greeting {
+  color: var(--muted);
+  font-size: 1.1rem;
+}
+
+.hero-name {
+  font-size: 2.75rem;
+  line-height: 1;
+  margin: 0;
+}
+
+.hero-tagline {
+  color: var(--primary);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-top: 0.25rem;
+}
+
+.hero-intro {
+  max-width: 600px;
+  margin: 1.5rem auto 2rem;
+  color: var(--muted);
+}
+
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: auto;          /* pushes the buttons to the bottom */
+}
+
+/* ===== Reusable buttons ===== */
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+.btn-secondary {
+  border: 2px solid var(--primary);
+  color: var(--primary);
+}
+
+.btn-secondary:hover {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+/* ===== Footer ===== */
+.footer {
+  background: var(--primary);
+  color: var(--nav-text);
+  text-align: center;
+  padding: 1.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.footer-links a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: var(--accent);
 }
 
 /* ===== Phones and small screens ===== */
@@ -92,5 +202,8 @@ h1 {
   }
   .nav-links {
     justify-content: center;
+  }
+  .hero-name {
+    font-size: 2rem;
   }
 }

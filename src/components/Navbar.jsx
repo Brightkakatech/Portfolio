@@ -10,6 +10,7 @@ const links = [
   { to: "/videos", label: "Videos" },
   { to: "/blog", label: "Blog" },
   { to: "/messages", label: "Messages" },
+  { to: "/readme", label: "Readme" },
 ];
 
 function Navbar() {
