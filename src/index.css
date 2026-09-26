@@ -1,0 +1,96 @@
+/* ===== Colour palette – navy and gold ===== */
+:root {
+  --primary: #1b2a49;      /* navy: navbar, headings */
+  --accent: #c9a227;       /* gold: active link */
+  --accent-text: #1b2a49;  /* navy text on gold, for readability */
+  --nav-text: #d7dcea;     /* soft white for inactive links */
+  --bg: #f8f6f0;           /* warm off-white background */
+  --text: #1d2b36;         /* main text */
+  --muted: #5b6b78;        /* secondary text */
+  font-family: system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* ===== Reset browser defaults ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* ===== Navigation bar ===== */
+.navbar {
+  position: sticky;          /* stays at the top when scrolling */
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  background: var(--primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.brand {
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.nav-link {
+  color: var(--nav-text);
+  text-decoration: none;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.nav-link.active {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+/* ===== Page content area ===== */
+main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+}
+
+h1 {
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+/* ===== Phones and small screens ===== */
+@media (max-width: 700px) {
+  .navbar {
+    justify-content: center;
+    padding: 1rem;
+  }
+  .brand {
+    width: 100%;
+    text-align: center;
+  }
+  .nav-links {
+    justify-content: center;
+  }
+}

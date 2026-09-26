@@ -1,17 +1,32 @@
 import { NavLink } from "react-router-dom";
 
+// One list of all pages – add or remove a page here and the menu updates
+const links = [
+  { to: "/", label: "Home" },
+  { to: "/about", label: "About" },
+  { to: "/education", label: "Education" },
+  { to: "/knowledge", label: "Professional Knowledge" },
+  { to: "/pictures", label: "Pictures" },
+  { to: "/videos", label: "Videos" },
+  { to: "/blog", label: "Blog" },
+  { to: "/messages", label: "Messages" },
+];
+
 function Navbar() {
   return (
-    <nav>
-      <NavLink to="/">Home</NavLink>
-      <NavLink to="/about">About</NavLink>
-      <NavLink to="/education">Education</NavLink>
-      <NavLink to="/knowledge">Professional Knowledge</NavLink>
-      <NavLink to="/pictures">Pictures</NavLink>
-      <NavLink to="/videos">Videos</NavLink>
-      <NavLink to="/blog">Blog</NavLink>
-      <NavLink to="/messages">Messages</NavLink>
-    </nav>
+    <header className="navbar">
+      <NavLink to="/" className="brand">
+        Bright Amalahu
+      </NavLink>
+
+      <nav className="nav-links">
+        {links.map((link) => (
+          <NavLink key={link.to} to={link.to} end className="nav-link">
+            {link.label}
+          </NavLink>
+        ))}
+      </nav>
+    </header>
   );
 }
 
