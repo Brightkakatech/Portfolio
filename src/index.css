@@ -282,6 +282,81 @@ h1 {
   border-radius: 999px;      /* fully rounded "pill" shape */
 }
 
+/* ===== Pictures Gallery ===== */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.gallery-item {
+  border: none;
+  padding: 0;
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;          /* keeps the zoomed image inside the card */
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.gallery-item img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;       /* every thumbnail the same shape */
+  object-fit: cover;         /* crops neatly instead of stretching */
+  transition: transform 0.3s;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.05);    /* gentle zoom on hover */
+}
+
+.gallery-caption {
+  display: block;
+  padding: 0.75rem 1rem;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+/* ===== Lightbox (large photo view) ===== */
+.lightbox {
+  position: fixed;           /* covers the whole screen */
+  inset: 0;
+  z-index: 100;              /* sits above the navbar */
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.lightbox img {
+  max-width: 90%;
+  max-height: 80vh;
+  border-radius: 8px;
+}
+
+.lightbox p {
+  color: #ffffff;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 2.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
 /* ===== Phones and small screens ===== */
 @media (max-width: 700px) {
   .navbar {
