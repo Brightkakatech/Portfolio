@@ -1,7 +1,9 @@
-import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-})
+  // The site will live at https://brightkakatech.github.io/Portfolio/
+  // so Vite must build all file paths starting with /Portfolio/
+  base: "/Portfolio/",
+});
