@@ -90,34 +90,23 @@ function Messages() {
       {/* ---------- Contact details ---------- */}
       <h2 className="section-title">Contact details</h2>
       <div className="contact-grid">
-        {contact.email && (
-          <a className="contact-card" href={`mailto:${contact.email}`}>
-            <span className="contact-label">Email</span>
-            <span className="contact-value">{contact.email}</span>
-          </a>
-        )}
-        {contact.github && (
-          <a
-            className="contact-card"
-            href={contact.github}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span className="contact-label">GitHub</span>
-            <span className="contact-value">View my repositories</span>
-          </a>
-        )}
-        {contact.linkedin && (
-          <a
-            className="contact-card"
-            href={contact.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span className="contact-label">LinkedIn</span>
-            <span className="contact-value">View my profile</span>
-          </a>
-        )}
+        {contact.map((item) => {
+          // Links to other websites open in a new tab; email links don't
+          const isExternal = item.url.startsWith("http");
+
+          return (
+            <a
+              className="contact-card"
+              key={item.label}
+              href={item.url}
+              target={isExternal ? "_blank" : undefined}
+              rel={isExternal ? "noopener noreferrer" : undefined}
+            >
+              <span className="contact-label">{item.label}</span>
+              <span className="contact-value">{item.text}</span>
+            </a>
+          );
+        })}
       </div>
 
       {/* ---------- Instant messaging ---------- */}
