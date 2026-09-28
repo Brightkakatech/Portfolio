@@ -492,6 +492,138 @@ h1 {
   color: #ffffff;
 }
 
+/* ===== Messages: contact details ===== */
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.contact-card {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  text-decoration: none;
+  border: 2px solid transparent;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  transition: border-color 0.2s;
+}
+
+.contact-card:hover {
+  border-color: var(--accent);   /* gold border on hover */
+}
+
+.contact-label {
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.contact-value {
+  color: var(--primary);
+  font-weight: 600;
+  overflow-wrap: anywhere;       /* long email addresses wrap instead of overflowing */
+}
+
+/* ===== Messages: chat ===== */
+.chat {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.chat-messages {
+  height: 320px;
+  overflow-y: auto;              /* scroll inside the box when it fills up */
+  background: #f1f3f7;
+  border-radius: 6px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.chat-empty {
+  margin: auto;                  /* centres the text in the empty box */
+  color: var(--muted);
+}
+
+.chat-bubble {
+  align-self: flex-end;          /* sent messages sit on the right */
+  max-width: 80%;
+  background: var(--primary);
+  color: #ffffff;
+  padding: 0.6rem 0.9rem;
+  border-radius: 12px 12px 2px 12px;   /* "speech bubble" corner */
+}
+
+.chat-meta {
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+.chat-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.chat-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chat-form input {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #c9ced8;
+  border-radius: 6px;
+  font: inherit;
+}
+
+.chat-form input:focus {
+  outline: 2px solid var(--accent);
+  border-color: transparent;
+}
+
+.chat-name {
+  flex: 0 1 180px;               /* narrow name box */
+}
+
+.chat-input {
+  flex: 1 1 250px;               /* message box takes the remaining space */
+}
+
+.chat-form .btn {
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+}
+
+.chat-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chat-note {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.chat-footer .btn-delete {
+  margin-top: 0;
+}
+
 /* ===== Phones and small screens ===== */
 @media (max-width: 700px) {
   .navbar {
