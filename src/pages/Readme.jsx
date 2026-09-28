@@ -1,8 +1,11 @@
+import Markdown from "react-markdown";
+// "?raw" tells Vite to load the file's text exactly as it is written
+import readmeText from "../../README.md?raw";
+
 function Readme() {
   return (
-    <section>
-      <h1>Readme</h1>
-      <p>Coming soon: a description of how this portfolio is structured.</p>
+    <section className="readme">
+      <Markdown>{readmeText}</Markdown>
     </section>
   );
 }
