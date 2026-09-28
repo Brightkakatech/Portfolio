@@ -10,7 +10,7 @@ const about = {
   story: [
     "Originally born in Nigeria, currently living in Ireland",
     "Currently studing MSc. Software Engineering, at University of Limerick, Ireland",
-    "Want to design industry sophisticated systems, strong and realiable",
+    "Want to design and build industry sophisticated systems, strong and realiable",
   ],
 
   // Quick facts shown as small cards
