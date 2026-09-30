@@ -6,8 +6,8 @@ function Footer() {
 
   return (
     <footer className="footer">
-      <p>© {year} Bright Amalahu. Built with React.</p>
-      <Link to="/readme" className="footer-link">Readme: how this site is built</Link>
+      <p>© {year} Bright Amalahu. All Rights Reserved.</p>
+      <Link to="/readme" className="footer-link">Readme</Link>
     </footer>
   );
 }
