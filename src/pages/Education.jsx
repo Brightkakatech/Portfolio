@@ -4,9 +4,7 @@ function Education() {
   return (
     <section>
       <h1>Education</h1>
-      <p className="page-intro">
-        My academic background and qualifications.
-      </p>
+      <p className="page-intro">My academic background and qualifications.</p>
 
       <div className="timeline">
         {/* Build one card for each item in the education list */}

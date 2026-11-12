@@ -28,7 +28,7 @@ export const experience = [
       "Administers Active Directory for user provisioning, permissions, access control, and security policy enforcement across onboarding and offboarding workflows.",
       "Designs and manages VPN configurations, Wi-Fi networks, and firewall rules, maintaining secure and resilient connectivity for remote and on site staff.",
       "Conducts proactive system audits, log reviews, and performance checks, identifying vulnerabilities and resolving issues before they impact business operations.",
-      "Produces clear technical documentation, change logs, and infrastructure reports to support governance, continuity planning, and knowledge transfer."
+      "Produces clear technical documentation, change logs, and infrastructure reports to support governance, continuity planning, and knowledge transfer.",
     ],
   },
 ];

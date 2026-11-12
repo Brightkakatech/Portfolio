@@ -15,7 +15,10 @@ const about = {
 
   // Quick facts shown as small cards
   highlights: [
-    { title: "Currently", text: "Postgraduate student, University of Limerick" },
+    {
+      title: "Currently",
+      text: "Postgraduate student, University of Limerick",
+    },
     { title: "Focus", text: "Software engineering and web development" },
     { title: "Based in", text: "Carlow, Ireland" },
   ],

@@ -7,7 +7,9 @@ function Footer() {
   return (
     <footer className="footer">
       <p>© {year} Bright Amalahu. All Rights Reserved.</p>
-      <Link to="/readme" className="footer-link">Readme</Link>
+      <Link to="/readme" className="footer-link">
+        Readme
+      </Link>
     </footer>
   );
 }

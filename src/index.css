@@ -1,7 +1,7 @@
 /* Colours */
 :root {
-  --primary: #1b2a49;      /* navy */
-  --accent: #c9a227;       /* gold */
+  --primary: #1b2a49; /* navy */
+  --accent: #c9a227; /* gold */
   --accent-text: #1b2a49;
   --nav-text: #d7dcea;
   --bg: #f8f6f0;
@@ -140,7 +140,9 @@ h1 {
   border-radius: 6px;
   text-decoration: none;
   font-weight: 600;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .btn-primary {

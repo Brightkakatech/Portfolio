@@ -56,7 +56,10 @@ function Messages() {
     event.preventDefault();
 
     if (!name.trim() || !text.trim()) {
-      setNotice({ type: "error", text: "Please enter your name and a message." });
+      setNotice({
+        type: "error",
+        text: "Please enter your name and a message.",
+      });
       return;
     }
 

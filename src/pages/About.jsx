@@ -13,7 +13,10 @@ function About() {
         {/* Only show the photo if one is set in about.js */}
         {about.photo && (
           <div className="about-photo">
-            <img src={`${base}images/${about.photo}`} alt="Portrait of Bright Amalahu" />
+            <img
+              src={`${base}images/${about.photo}`}
+              alt="Portrait of Bright Amalahu"
+            />
           </div>
         )}
 
