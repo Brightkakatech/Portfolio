@@ -1,18 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import contact from "../data/contact";
+import { loadList, saveList } from "../services/storage";
+import { isValidMessage } from "../services/validators";
 
 // Name under which chat messages are saved in the browser
 const STORAGE_KEY = "chat-messages";
-
-// Load saved messages if there are any; otherwise start empty
-function loadMessages() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : [];
-  } catch {
-    return [];
-  }
-}
 
 // Turns a saved time into e.g. "28 Sept, 14:05"
 function formatTime(time) {
@@ -25,18 +17,16 @@ function formatTime(time) {
 }
 
 function Messages() {
-  const [messages, setMessages] = useState(loadMessages);
+  const [messages, setMessages] = useState(() =>
+    loadList(STORAGE_KEY, isValidMessage),
+  );
+
   const [name, setName] = useState("");
   const [text, setText] = useState("");
   const [notice, setNotice] = useState(null);
 
   // A direct handle on the message list, used for auto-scrolling
   const listRef = useRef(null);
-
-  // Save messages to the browser whenever they change
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
-  }, [messages]);
 
   // Scroll to the newest message whenever the list changes
   useEffect(() => {
@@ -70,14 +60,23 @@ function Messages() {
       time: new Date().toISOString(),
     };
 
-    setMessages([...messages, newMessage]); // newest message last, like a chat
+    const updated = [...messages, newMessage]; // newest message last, like a chat
+
+    // Stop and tell the visitor if the browser refuses to save
+    if (!saveList(STORAGE_KEY, updated)) {
+      setNotice({ type: "error", text: "Your message could not be saved." });
+      return;
+    }
+
+    setMessages(updated);
     setText(""); // clear the message box but keep the name
-    setNotice({ type: "success", text: "Message sent." });
+    setNotice({ type: "success", text: "Message saved in this browser." });
   }
 
   // Deletes the whole conversation after asking for confirmation
   function handleClear() {
     if (window.confirm("Clear the whole conversation?")) {
+      saveList(STORAGE_KEY, []);
       setMessages([]);
       setNotice({ type: "success", text: "Conversation cleared." });
     }

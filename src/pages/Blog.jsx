@@ -1,18 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { loadList, saveList } from "../services/storage";
+import { isValidPost } from "../services/validators";
 import starterPosts from "../data/posts";
 
 // Name under which posts are saved in the browser
 const STORAGE_KEY = "blog-posts";
-
-// Load saved posts if there are any; otherwise use the starter posts
-function loadPosts() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : starterPosts;
-  } catch {
-    return starterPosts;
-  }
-}
 
 // Turns "2026-09-28" into "28 September 2026"
 function formatDate(date) {
@@ -24,14 +16,12 @@ function formatDate(date) {
 }
 
 function Blog() {
-  const [posts, setPosts] = useState(loadPosts);
+  const [posts, setPosts] = useState(() =>
+    loadList(STORAGE_KEY, isValidPost, starterPosts),
+  );
+  const [error, setError] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-
-  // Save posts to the browser whenever they change
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
-  }, [posts]);
 
   // Runs when the form is submitted
   function handleSubmit(event) {
@@ -47,14 +37,25 @@ function Blog() {
       content: content.trim(),
     };
 
-    setPosts([newPost, ...posts]); // newest post first
+    const updated = [newPost, ...posts]; // newest post first
+
+    if (!saveList(STORAGE_KEY, updated)) {
+      setError("The post could not be saved in this browser.");
+      return;
+    }
+
+    setError("");
+    setPosts(updated);
+
     setTitle("");
     setContent("");
   }
 
   // Removes the post with the matching id
   function handleDelete(id) {
-    setPosts(posts.filter((post) => post.id !== id));
+    const updated = posts.filter((post) => post.id !== id);
+    saveList(STORAGE_KEY, updated);
+    setPosts(updated);
   }
 
   return (
@@ -88,6 +89,12 @@ function Blog() {
           Publish
         </button>
       </form>
+
+      {error && (
+        <p className="notice notice-error" role="alert">
+          {error}
+        </p>
+      )}
 
       {/* ---------- List of posts ---------- */}
       <div className="blog-list">
