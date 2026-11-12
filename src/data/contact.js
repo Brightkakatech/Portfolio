@@ -4,7 +4,7 @@ const contact = [
   {
     label: "Email",
     text: "26059274@studentmail.ul.ie",
-    url: "26059274@studentmail.ul.ie",
+    url: "mailto:26059274@studentmail.ul.ie",
   },
   {
     label: "GitHub",
