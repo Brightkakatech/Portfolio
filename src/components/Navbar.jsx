@@ -13,6 +13,11 @@ const links = [
   { to: "/messages", label: "Messages" },
 ];
 
+/**
+ * Main menu, built from the links list above. NavLink highlights the page
+ * the visitor is on; "end" stops Home from staying highlighted on every page.
+ */
+
 function Navbar() {
   return (
     <header className="navbar">

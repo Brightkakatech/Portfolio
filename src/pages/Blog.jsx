@@ -15,6 +15,11 @@ function formatDate(date) {
   });
 }
 
+/**
+ * Blog page: a form for writing posts and the list of saved posts.
+ * Posts are loaded and saved through services/storage.js.
+ */
+
 function Blog() {
   const [posts, setPosts] = useState(() =>
     loadList(STORAGE_KEY, isValidPost, starterPosts),
@@ -23,15 +28,15 @@ function Blog() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
-  // Runs when the form is submitted
+  // Runs when the form is submitted: adds a new post unless the title or text is empty
   function handleSubmit(event) {
-    event.preventDefault(); // stop the page from reloading
+    event.preventDefault(); // stop the page from reloading, so React can handle the post instead
 
     // Ignore empty posts
     if (!title.trim() || !content.trim()) return;
 
     const newPost = {
-      id: Date.now(), // unique number based on the current time
+      id: Date.now(), // unique number based on the current time, enough to tell one person's posts apart
       title: title.trim(),
       date: new Date().toISOString().slice(0, 10), // today, e.g. 2026-09-28
       content: content.trim(),
@@ -51,7 +56,8 @@ function Blog() {
     setContent("");
   }
 
-  // Removes the post with the matching id
+  // Removes the post with the matching id. filter() makes a new list,
+  // because React state should be replaced, not changed in place.
   function handleDelete(id) {
     const updated = posts.filter((post) => post.id !== id);
     saveList(STORAGE_KEY, updated);

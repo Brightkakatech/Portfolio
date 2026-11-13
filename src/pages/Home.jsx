@@ -1,12 +1,17 @@
 import { Link } from "react-router-dom";
 
+/**
+ * Landing page: name, tagline, a short introduction and a call to action
+ * that leads visitors to the Messages page.
+ */
+
 function Home() {
   return (
     <section className="hero">
       <h1 className="hero-name">Bright Amalahu</h1>
       <p className="hero-tagline">
-        [A Software Engineer masters student at University of Limerick,
-        Ireland.]
+        Master's student in Software Engineering at the University of Limerick,
+        Ireland.
       </p>
 
       <p className="hero-intro">

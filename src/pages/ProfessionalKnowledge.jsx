@@ -1,5 +1,10 @@
 import { skillGroups, experience } from "../data/knowledge";
 
+/**
+ * Skills and experience, read from data/knowledge.js. Reuses the Education
+ * card styles so both pages look consistent.
+ */
+
 function ProfessionalKnowledge() {
   return (
     <section>

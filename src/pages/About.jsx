@@ -3,6 +3,11 @@ import about from "../data/about";
 // The site's base address – keeps the photo path working after deployment
 const base = import.meta.env.BASE_URL;
 
+/**
+ * About page. All text comes from data/about.js, so the content can be
+ * updated without touching the layout.
+ */
+
 function About() {
   return (
     <section>

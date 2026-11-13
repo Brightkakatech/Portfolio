@@ -1,5 +1,9 @@
 import education from "../data/education";
 
+/**
+ * Education page: one card per qualification, read from data/education.js.
+ */
+
 function Education() {
   return (
     <section>

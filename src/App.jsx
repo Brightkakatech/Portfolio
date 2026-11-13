@@ -11,6 +11,13 @@ import Blog from "./pages/Blog";
 import Messages from "./pages/Messages";
 import Readme from "./pages/Readme";
 
+/**
+ * Root component: the shared layout (Navbar, current page, Footer) and the routes.
+ * HashRouter is used because GitHub Pages only serves static files. With
+ * "#/about" style addresses, refreshing a page never asks the server for a
+ * file that does not exist, so visitors never see GitHub's 404 page.
+ */
+
 function App() {
   return (
     <HashRouter>
