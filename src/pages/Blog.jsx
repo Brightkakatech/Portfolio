@@ -1,58 +1,58 @@
-import { useState } from "react";
-import { loadList, saveList } from "../services/storage";
-import { isValidPost } from "../services/validators";
-import starterPosts from "../data/posts";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { watchPosts, publishPost, deletePost } from "../services/posts";
 import { formatDate } from "../utils/format";
 
-// Name under which posts are saved in the browser
-const STORAGE_KEY = "blog-posts";
 /**
- * Blog page: a form for writing posts and the list of saved posts.
- * Posts are loaded and saved through services/storage.js.
+ * Community blog. Everyone can read the posts; signed-in users with a
+ * verified email can publish. Authors can delete their own posts and the
+ * owner can delete any. firestore.rules enforces the same rules on the server.
  */
-
 function Blog() {
-  const [posts, setPosts] = useState(() =>
-    loadList(STORAGE_KEY, isValidPost, starterPosts),
-  );
-  const [error, setError] = useState("");
+  const { user, isOwner } = useAuth();
+  const [posts, setPosts] = useState(null); // null until the first load
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [error, setError] = useState("");
+  const [publishing, setPublishing] = useState(false);
 
-  // Runs when the form is submitted: adds a new post unless the title or text is empty
-  function handleSubmit(event) {
+  // Listen for posts while the page is open, so new posts appear live
+  useEffect(() => watchPosts(setPosts, setError), []);
+
+  // Only signed-in users with a verified email may write
+  const canWrite = user?.emailVerified;
+
+  // Runs when the form is submitted: publishes the post unless the title or text is empty
+  async function handleSubmit(event) {
     event.preventDefault(); // stop the page from reloading, so React can handle the post instead
 
     // Ignore empty posts
     if (!title.trim() || !content.trim()) return;
 
-    const newPost = {
-      id: Date.now(), // unique number based on the current time, enough to tell one person's posts apart
-      title: title.trim(),
-      date: new Date().toISOString().slice(0, 10), // today, e.g. 2026-09-28
-      content: content.trim(),
-    };
+    setPublishing(true);
+    const result = await publishPost(title.trim(), content.trim());
+    setPublishing(false);
 
-    const updated = [newPost, ...posts]; // newest post first
-
-    if (!saveList(STORAGE_KEY, updated)) {
-      setError("The post could not be saved in this browser.");
+    if (!result.ok) {
+      setError(result.error);
       return;
     }
 
     setError("");
-    setPosts(updated);
-
     setTitle("");
     setContent("");
   }
 
-  // Removes the post with the matching id. filter() makes a new list,
-  // because React state should be replaced, not changed in place.
-  function handleDelete(id) {
-    const updated = posts.filter((post) => post.id !== id);
-    saveList(STORAGE_KEY, updated);
-    setPosts(updated);
+  // Authors may delete their own posts; the owner may delete any
+  function canDelete(post) {
+    return isOwner || post.authorId === user?.uid;
+  }
+
+  async function handleDelete(id) {
+    if (!window.confirm("Delete this post?")) return;
+    const result = await deletePost(id);
+    if (!result.ok) setError(result.error);
   }
 
   return (
@@ -60,32 +60,45 @@ function Blog() {
       <h1>Blog</h1>
       <p className="page-intro">Thoughts, lessons and updates.</p>
 
-      {/* ---------- Write a new post ---------- */}
-      <form className="blog-form" onSubmit={handleSubmit}>
-        <h2>Write a post</h2>
+      {/* ---------- Write a new post (signed-in, verified users only) ---------- */}
+      {canWrite ? (
+        <form className="blog-form" onSubmit={handleSubmit}>
+          <h2>Write a post</h2>
 
-        <label htmlFor="post-title">Title</label>
-        <input
-          id="post-title"
-          type="text"
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
-          placeholder="Post title"
-        />
+          <label htmlFor="post-title">Title</label>
+          <input
+            id="post-title"
+            type="text"
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+            placeholder="Post title"
+            maxLength={150}
+          />
 
-        <label htmlFor="post-content">Post</label>
-        <textarea
-          id="post-content"
-          rows="5"
-          value={content}
-          onChange={(event) => setContent(event.target.value)}
-          placeholder="Write your post here..."
-        />
+          <label htmlFor="post-content">Post</label>
+          <textarea
+            id="post-content"
+            rows="5"
+            value={content}
+            onChange={(event) => setContent(event.target.value)}
+            placeholder="Write your post here..."
+            maxLength={10000}
+          />
 
-        <button type="submit" className="btn btn-primary">
-          Publish
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={publishing}
+          >
+            {publishing ? "Publishing…" : "Publish"}
+          </button>
+        </form>
+      ) : (
+        <p className="page-intro">
+          <Link to="/signin">{user ? "Verify your email" : "Sign in"}</Link> to
+          write a post.
+        </p>
+      )}
 
       {error && (
         <p className="notice notice-error" role="alert">
@@ -95,20 +108,26 @@ function Blog() {
 
       {/* ---------- List of posts ---------- */}
       <div className="blog-list">
-        {posts.length === 0 ? (
+        {posts === null ? (
+          <p className="page-intro">Loading posts…</p>
+        ) : posts.length === 0 ? (
           <p className="page-intro">No posts yet.</p>
         ) : (
           posts.map((post) => (
             <article className="blog-post" key={post.id}>
               <h2>{post.title}</h2>
-              <p className="blog-date">{formatDate(post.date)}</p>
+              <p className="blog-date">
+                {formatDate(post.date)} · {post.authorName}
+              </p>
               <p className="blog-content">{post.content}</p>
-              <button
-                className="btn-delete"
-                onClick={() => handleDelete(post.id)}
-              >
-                Delete
-              </button>
+              {canDelete(post) && (
+                <button
+                  className="btn-delete"
+                  onClick={() => handleDelete(post.id)}
+                >
+                  Delete
+                </button>
+              )}
             </article>
           ))
         )}
