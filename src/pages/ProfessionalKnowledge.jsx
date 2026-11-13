@@ -1,20 +1,24 @@
 import { useJsonData } from "../hooks/useJsonData";
+import { useRevealOnScroll } from "../hooks/useAnimations";
 import DataStatus from "../components/DataStatus";
 import GitHubRepos from "../components/GitHubRepos";
 
 /**
- * Skills and experience, read from data/knowledge.json. Reuses the Education
- * card styles so both pages look consistent.
+ * Skills, experience and live GitHub projects. Skills and experience are
+ * read from data/knowledge.json and reuse the Education card styles so both
+ * pages look consistent. Cards fade in as they scroll into view.
  */
 function ProfessionalKnowledge() {
   const { data: knowledge, error } = useJsonData("knowledge");
+  // Fade the skill groups and experience cards in as they scroll into view
+  const pageRef = useRevealOnScroll(".skill-group, .edu-card", [knowledge]);
   if (!knowledge) return <DataStatus error={error} />;
 
   // knowledge.json holds two lists: skill groups and work experience
   const { skillGroups, experience } = knowledge;
 
   return (
-    <section>
+    <section ref={pageRef}>
       <h1>Professional Knowledge</h1>
       <p className="page-intro">
         The skills I have developed and the experience I have gained.
@@ -56,6 +60,7 @@ function ProfessionalKnowledge() {
           </article>
         ))}
       </div>
+
       {/* ---------- Live projects from the GitHub API ---------- */}
       <GitHubRepos />
     </section>

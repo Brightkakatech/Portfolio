@@ -1,12 +1,17 @@
 import { Link } from "react-router-dom";
+import { useEntrance } from "../hooks/useAnimations";
 
 /**
  * Landing page: name, tagline, a short introduction and a call to action
- * that leads visitors to the Messages page.
+ * that leads visitors to the Messages page. The content slides in when
+ * the page opens (skipped for visitors who prefer reduced motion).
  */
 function Home() {
+  // Slide the name, tagline, introduction and button in one after another
+  const heroRef = useEntrance(":scope > *");
+
   return (
-    <section className="hero">
+    <section className="hero" ref={heroRef}>
       <h1 className="hero-name">Bright Amalahu</h1>
       <p className="hero-tagline">
         Master's student in Software Engineering at the University of Limerick,

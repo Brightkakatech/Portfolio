@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
 import { fetchRepos, PROFILE_URL } from "../services/github";
 import { formatDate } from "../utils/format";
+import { useRevealOnScroll } from "../hooks/useAnimations";
 
 /**
  * "Latest projects on GitHub": the owner's public repositories, loaded live
  * from the GitHub API each time the page opens, so the list stays up to
- * date without editing the site.
+ * date without editing the site. Cards fade in as they scroll into view.
  */
 function GitHubRepos() {
   const [repos, setRepos] = useState(null); // null until GitHub answers
   const [error, setError] = useState("");
+
+  // Fade each project card in once GitHub's answer has arrived
+  const gridRef = useRevealOnScroll(".repo-card", [repos]);
 
   useEffect(() => {
     // If the visitor leaves before GitHub answers, ignore the answer
@@ -47,7 +51,7 @@ function GitHubRepos() {
       )}
 
       {repos && repos.length > 0 && (
-        <div className="repo-grid">
+        <div className="repo-grid" ref={gridRef}>
           {repos.map((repo) => (
             <a
               className="repo-card"
