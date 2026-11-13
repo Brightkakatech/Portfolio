@@ -1,38 +1,23 @@
-import { useState, useEffect, useRef } from "react";
-import contact from "../data/contact";
+import { useState, useEffect } from "react";
+import ContactLinks from "../components/messages/ContactLinks";
+import MessageList from "../components/messages/MessageList";
+import MessageInput from "../components/messages/MessageInput";
 import { loadList, saveList } from "../services/storage";
 import { isValidMessage } from "../services/validators";
 
 // Name under which chat messages are saved in the browser
 const STORAGE_KEY = "chat-messages";
 
-// Turns a saved time into e.g. "28 Sept, 14:05"
-function formatTime(time) {
-  return new Date(time).toLocaleString("en-IE", {
-    day: "numeric",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
-
+/**
+ * Messages page: contact details and a simple chat.
+ * This page owns the message list and the notices; the child
+ * components only display information or collect input.
+ */
 function Messages() {
   const [messages, setMessages] = useState(() =>
     loadList(STORAGE_KEY, isValidMessage),
   );
-
-  const [name, setName] = useState("");
-  const [text, setText] = useState("");
   const [notice, setNotice] = useState(null);
-
-  // A direct handle on the message list, used for auto-scrolling
-  const listRef = useRef(null);
-
-  // Scroll to the newest message whenever the list changes
-  useEffect(() => {
-    const list = listRef.current;
-    if (list) list.scrollTop = list.scrollHeight;
-  }, [messages]);
 
   // Hide the notice automatically after 3 seconds
   useEffect(() => {
@@ -41,16 +26,19 @@ function Messages() {
     return () => clearTimeout(timer);
   }, [notice]);
 
-  // Runs when Send is clicked or Enter is pressed
-  function handleSend(event) {
-    event.preventDefault();
-
+  /**
+   * Checks and saves a new message.
+   * @param {string} name - The sender's name.
+   * @param {string} text - The message.
+   * @returns {boolean} True if the message was saved.
+   */
+  function handleSend(name, text) {
     if (!name.trim() || !text.trim()) {
       setNotice({
         type: "error",
         text: "Please enter your name and a message.",
       });
-      return;
+      return false;
     }
 
     const newMessage = {
@@ -59,18 +47,16 @@ function Messages() {
       text: text.trim(),
       time: new Date().toISOString(),
     };
+    const updated = [...messages, newMessage]; // newest message last
 
-    const updated = [...messages, newMessage]; // newest message last, like a chat
-
-    // Stop and tell the visitor if the browser refuses to save
     if (!saveList(STORAGE_KEY, updated)) {
       setNotice({ type: "error", text: "Your message could not be saved." });
-      return;
+      return false;
     }
 
     setMessages(updated);
-    setText(""); // clear the message box but keep the name
     setNotice({ type: "success", text: "Message saved in this browser." });
+    return true;
   }
 
   // Deletes the whole conversation after asking for confirmation
@@ -89,67 +75,13 @@ function Messages() {
         Get in touch using my contact details, or leave a message below.
       </p>
 
-      {/* ---------- Contact details ---------- */}
       <h2 className="section-title">Contact details</h2>
-      <div className="contact-grid">
-        {contact.map((item) => {
-          // Links to other websites open in a new tab; email links don't
-          const isExternal = item.url.startsWith("http");
+      <ContactLinks />
 
-          return (
-            <a
-              className="contact-card"
-              key={item.label}
-              href={item.url}
-              target={isExternal ? "_blank" : undefined}
-              rel={isExternal ? "noopener noreferrer" : undefined}
-            >
-              <span className="contact-label">{item.label}</span>
-              <span className="contact-value">{item.text}</span>
-            </a>
-          );
-        })}
-      </div>
-
-      {/* ---------- Instant messaging ---------- */}
       <h2 className="section-title">Instant messaging</h2>
       <div className="chat">
-        <div className="chat-messages" ref={listRef}>
-          {messages.length === 0 ? (
-            <p className="chat-empty">No messages yet. Say hello!</p>
-          ) : (
-            messages.map((message) => (
-              <div className="chat-bubble" key={message.id}>
-                <p className="chat-meta">
-                  <strong>{message.name}</strong> · {formatTime(message.time)}
-                </p>
-                <p className="chat-text">{message.text}</p>
-              </div>
-            ))
-          )}
-        </div>
-
-        <form className="chat-form" onSubmit={handleSend}>
-          <input
-            type="text"
-            className="chat-name"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            placeholder="Your name"
-            aria-label="Your name"
-          />
-          <input
-            type="text"
-            className="chat-input"
-            value={text}
-            onChange={(event) => setText(event.target.value)}
-            placeholder="Type a message and press Enter"
-            aria-label="Message"
-          />
-          <button type="submit" className="btn btn-primary">
-            Send
-          </button>
-        </form>
+        <MessageList messages={messages} />
+        <MessageInput onSend={handleSend} />
 
         {notice && (
           <p className={`notice notice-${notice.type}`} role="status">
