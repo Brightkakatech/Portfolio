@@ -24,11 +24,12 @@ service cloud.firestore {
       allow read, delete: if isOwner();
     }
 
-    // Blog posts: anyone may read; any signed-in user may publish.
+    // Blog posts: anyone may read; signed-in users with a verified email may publish.
     // Authors may delete their own posts; the owner may delete any (moderation).
     match /posts/{postId} {
       allow read: if true;
       allow create: if request.auth != null
+        && request.auth.token.email_verified == true // stops unverified (possibly fake) accounts posting
         && request.resource.data.keys().hasOnly(["title", "content", "date", "authorId", "authorName"])
         && isText(request.resource.data.title, 150)
         && isText(request.resource.data.content, 10000)

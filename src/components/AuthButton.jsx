@@ -1,9 +1,11 @@
+import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { signIn, signOut } from "../services/auth";
+import { signOut } from "../services/auth";
 
 /**
- * Sign in / Sign out button for the Navbar.
- * Shows the user's first name while signed in.
+ * Sign in / Sign out control for the Navbar.
+ * Signed out: a link to the sign-in page. Signed in: a button showing
+ * the user's first name that signs them out.
  */
 function AuthButton() {
   const { user, loading } = useAuth();
@@ -14,9 +16,9 @@ function AuthButton() {
 
   if (!user) {
     return (
-      <button className="btn-auth" onClick={signIn}>
+      <NavLink to="/signin" className="btn-auth">
         Sign in
-      </button>
+      </NavLink>
     );
   }
 

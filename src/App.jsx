@@ -10,6 +10,7 @@ import VideoGallery from "./pages/VideoGallery";
 import Blog from "./pages/Blog";
 import Messages from "./pages/Messages";
 import Readme from "./pages/Readme";
+import SignIn from "./pages/SignIn";
 
 /**
  * Root component: the shared layout (Navbar, current page, Footer) and the routes.
@@ -35,6 +36,7 @@ function App() {
             <Route path="/blog" element={<Blog />} />
             <Route path="/messages" element={<Messages />} />
             <Route path="/readme" element={<Readme />} />
+            <Route path="/signin" element={<SignIn />} />
           </Routes>
         </main>
         <Footer />
