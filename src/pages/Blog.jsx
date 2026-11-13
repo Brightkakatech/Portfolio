@@ -2,19 +2,10 @@ import { useState } from "react";
 import { loadList, saveList } from "../services/storage";
 import { isValidPost } from "../services/validators";
 import starterPosts from "../data/posts";
+import { formatDate } from "../utils/format";
 
 // Name under which posts are saved in the browser
 const STORAGE_KEY = "blog-posts";
-
-// Turns "2026-09-28" into "28 September 2026"
-function formatDate(date) {
-  return new Date(date).toLocaleDateString("en-IE", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-}
-
 /**
  * Blog page: a form for writing posts and the list of saved posts.
  * Posts are loaded and saved through services/storage.js.

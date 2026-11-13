@@ -1,19 +1,5 @@
 import { useEffect, useRef } from "react";
-
-/**
- * Formats a saved time for display, e.g. "28 Sept, 14:05".
- * @param {string} time - An ISO date string.
- * @returns {string}
- */
-function formatTime(time) {
-  return new Date(time).toLocaleString("en-IE", {
-    day: "numeric",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
-
+import { formatTime } from "../../utils/format";
 /**
  * Shows the conversation and keeps the newest message in view.
  * @param {object} props

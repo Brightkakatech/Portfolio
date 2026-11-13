@@ -830,4 +830,8 @@ h1 {
     font: inherit;
     cursor: pointer;
   }
+  /* Owner's inbox on the Messages page */
+  .inbox {
+    margin-top: 2.5rem;
+  }
 }
