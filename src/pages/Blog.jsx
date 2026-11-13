@@ -3,11 +3,13 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { watchPosts, publishPost, deletePost } from "../services/posts";
 import { formatDate } from "../utils/format";
+import { filterPosts, listAuthors } from "../utils/filterPosts"; // NEW
 
 /**
- * Community blog. Everyone can read the posts; signed-in users with a
- * verified email can publish. Authors can delete their own posts and the
- * owner can delete any. firestore.rules enforces the same rules on the server.
+ * Community blog. Everyone can read the posts and search or filter them;
+ * signed-in users with a verified email can publish. Authors can delete
+ * their own posts and the owner can delete any. firestore.rules enforces
+ * the same rules on the server.
  */
 function Blog() {
   const { user, isOwner } = useAuth();
@@ -16,12 +18,19 @@ function Blog() {
   const [content, setContent] = useState("");
   const [error, setError] = useState("");
   const [publishing, setPublishing] = useState(false);
+  const [search, setSearch] = useState(""); // NEW: the search box text
+  const [author, setAuthor] = useState("all"); // NEW: the chosen author
 
   // Listen for posts while the page is open, so new posts appear live
   useEffect(() => watchPosts(setPosts, setError), []);
 
   // Only signed-in users with a verified email may write
   const canWrite = user?.emailVerified;
+
+  // NEW: worked out again on every render, so the list updates as you type
+  const allPosts = posts ?? [];
+  const visiblePosts = filterPosts(allPosts, search, author);
+  const authors = listAuthors(allPosts);
 
   // Runs when the form is submitted: publishes the post unless the title or text is empty
   async function handleSubmit(event) {
@@ -106,14 +115,46 @@ function Blog() {
         </p>
       )}
 
+      {/* ---------- NEW: Search and filter ---------- */}
+      {allPosts.length > 0 && (
+        <>
+          <div className="blog-toolbar">
+            <input
+              type="search"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Search posts"
+              aria-label="Search posts"
+            />
+            <select
+              value={author}
+              onChange={(event) => setAuthor(event.target.value)}
+              aria-label="Filter by author"
+            >
+              <option value="all">All authors</option>
+              {authors.map((name) => (
+                <option key={name} value={name}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <p className="blog-count" role="status">
+            Showing {visiblePosts.length} of {allPosts.length} posts
+          </p>
+        </>
+      )}
+
       {/* ---------- List of posts ---------- */}
       <div className="blog-list">
         {posts === null ? (
           <p className="page-intro">Loading posts…</p>
-        ) : posts.length === 0 ? (
+        ) : allPosts.length === 0 ? (
           <p className="page-intro">No posts yet.</p>
+        ) : visiblePosts.length === 0 ? (
+          <p className="page-intro">No posts match your search.</p>
         ) : (
-          posts.map((post) => (
+          visiblePosts.map((post) => (
             <article className="blog-post" key={post.id}>
               <h2>{post.title}</h2>
               <p className="blog-date">

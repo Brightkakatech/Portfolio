@@ -883,3 +883,35 @@ h1 {
   font-size: 0.85rem;
   margin-top: 0.6rem;
 }
+/* Blog search and filter */
+.blog-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.blog-toolbar input,
+.blog-toolbar select {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #c9ced8;
+  border-radius: 6px;
+  background: #ffffff;
+  font: inherit;
+}
+
+.blog-toolbar input {
+  flex: 1 1 250px;
+}
+
+.blog-toolbar input:focus,
+.blog-toolbar select:focus {
+  outline: 2px solid var(--accent);
+  border-color: transparent;
+}
+
+.blog-count {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
