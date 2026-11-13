@@ -13,7 +13,8 @@ import {
   query,
   serverTimestamp,
 } from "firebase/firestore";
-import { auth, db } from "./firebase";
+import { auth } from "./firebase";
+import { db } from "./db";
 
 const postsRef = collection(db, "posts");
 

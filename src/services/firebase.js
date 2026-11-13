@@ -1,11 +1,12 @@
 /**
- * Connects the site to Firebase.
+ * Connects the site to Firebase and sets up sign-in.
  * These config values are public by design: they only identify the project.
  * Who can read or write data is controlled by the Firestore security rules
- * and by Google sign-in, not by hiding these values.
+ * and by sign-in, not by hiding these values.
+ * The database is set up separately in db.js, so its code is only
+ * downloaded on the pages that use it.
  */
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
@@ -17,13 +18,11 @@ const firebaseConfig = {
   appId: "1:946506866333:web:73e2625e683fe927147e74",
 };
 
-const app = initializeApp(firebaseConfig);
+/** The connection to the Firebase project, shared by auth and the database. */
+export const app = initializeApp(firebaseConfig);
 
-/** The Firestore database, used for messages and blog posts. */
-export const db = getFirestore(app);
-
-/** Firebase Authentication, used so only the owner can manage content. */
+/** Firebase Authentication, used for Google and email sign-in. */
 export const auth = getAuth(app);
 
-/** Lets the owner sign in with their Google account. */
+/** Lets users sign in with their Google account. */
 export const googleProvider = new GoogleAuthProvider();

@@ -834,4 +834,13 @@ h1 {
   .inbox {
     margin-top: 2.5rem;
   }
+  /* Page not found */
+  .not-found {
+    text-align: center;
+    padding: 3rem 0;
+  }
+
+  .not-found .hero-buttons {
+    justify-content: center;
+  }
 }

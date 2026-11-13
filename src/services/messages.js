@@ -12,7 +12,7 @@ import {
   query,
   serverTimestamp,
 } from "firebase/firestore";
-import { db } from "./firebase";
+import { db } from "./db";
 
 const messagesRef = collection(db, "messages");
 
