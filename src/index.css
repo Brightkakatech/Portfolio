@@ -75,6 +75,23 @@ body {
   color: var(--accent-text);
 }
 
+/* Sign in / Sign out button at the end of the menu */
+.btn-auth {
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-auth:hover {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
 /* Main content */
 main {
   flex: 1; /* fills the space between navbar and footer */

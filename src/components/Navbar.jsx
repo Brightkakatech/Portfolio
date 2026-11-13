@@ -1,3 +1,4 @@
+import AuthButton from "./AuthButton";
 import { NavLink } from "react-router-dom";
 
 // One list of all pages in the menu – add or remove a page here and the menu updates
@@ -31,6 +32,7 @@ function Navbar() {
             {link.label}
           </NavLink>
         ))}
+        <AuthButton />
       </nav>
     </header>
   );
