@@ -1,21 +1,24 @@
-import about from "../data/about";
+import { useJsonData } from "../hooks/useJsonData";
+import DataStatus from "../components/DataStatus";
 
 // The site's base address – keeps the photo path working after deployment
 const base = import.meta.env.BASE_URL;
 
 /**
- * About page. All text comes from data/about.js, so the content can be
+ * About page. All text comes from data/about.json, so the content can be
  * updated without touching the layout.
  */
-
 function About() {
+  const { data: about, error } = useJsonData("about");
+  if (!about) return <DataStatus error={error} />;
+
   return (
     <section>
       <h1>About Me</h1>
 
       {/* ---------- Photo and story ---------- */}
       <div className="about-layout">
-        {/* Only show the photo if one is set in about.js */}
+        {/* Only show the photo if one is set in about.json */}
         {about.photo && (
           <div className="about-photo">
             <img

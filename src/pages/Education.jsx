@@ -1,10 +1,13 @@
-import education from "../data/education";
+import { useJsonData } from "../hooks/useJsonData";
+import DataStatus from "../components/DataStatus";
 
 /**
- * Education page: one card per qualification, read from data/education.js.
+ * Education page: one card per qualification, read from data/education.json.
  */
-
 function Education() {
+  const { data: education, error } = useJsonData("education");
+  if (!education) return <DataStatus error={error} />;
+
   return (
     <section>
       <h1>Education</h1>

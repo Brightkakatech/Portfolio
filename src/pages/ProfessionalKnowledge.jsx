@@ -1,11 +1,17 @@
-import { skillGroups, experience } from "../data/knowledge";
+import { useJsonData } from "../hooks/useJsonData";
+import DataStatus from "../components/DataStatus";
 
 /**
- * Skills and experience, read from data/knowledge.js. Reuses the Education
+ * Skills and experience, read from data/knowledge.json. Reuses the Education
  * card styles so both pages look consistent.
  */
-
 function ProfessionalKnowledge() {
+  const { data: knowledge, error } = useJsonData("knowledge");
+  if (!knowledge) return <DataStatus error={error} />;
+
+  // knowledge.json holds two lists: skill groups and work experience
+  const { skillGroups, experience } = knowledge;
+
   return (
     <section>
       <h1>Professional Knowledge</h1>

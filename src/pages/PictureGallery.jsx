@@ -1,17 +1,21 @@
 import { useState } from "react";
-import gallery from "../data/gallery";
+import { useJsonData } from "../hooks/useJsonData";
+import DataStatus from "../components/DataStatus";
 
 // The site's base address – keeps image paths working after deployment
 const base = import.meta.env.BASE_URL;
 
 /**
- * Photo grid with a large view. Clicking a thumbnail stores that photo in
- * state, which opens the large view; closing it sets the state back to null.
+ * Photo grid with a large view, read from data/gallery.json. Clicking a
+ * thumbnail stores that photo in state, which opens the large view;
+ * closing it sets the state back to null.
  */
-
 function PictureGallery() {
   // Remembers which photo is open in the large view (null = none)
   const [selected, setSelected] = useState(null);
+
+  const { data: gallery, error } = useJsonData("gallery");
+  if (!gallery) return <DataStatus error={error} />;
 
   return (
     <section>

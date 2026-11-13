@@ -1,10 +1,15 @@
-import contact from "../../data/contact";
+import { useJsonData } from "../../hooks/useJsonData";
+import DataStatus from "../DataStatus";
 
 /**
- * Shows the owner's contact details as clickable cards.
- * Web links open in a new tab; the email link opens the visitor's mail app.
+ * Shows the owner's contact details as clickable cards, read from
+ * data/contact.json. Web links open in a new tab; the email link opens
+ * the visitor's mail app.
  */
 function ContactLinks() {
+  const { data: contact, error } = useJsonData("contact");
+  if (!contact) return <DataStatus error={error} />;
+
   return (
     <div className="contact-grid">
       {contact.map((item) => {

@@ -1,14 +1,17 @@
-import videos from "../data/videos";
+import { useJsonData } from "../hooks/useJsonData";
+import DataStatus from "../components/DataStatus";
 
 // The site's base address – keeps video paths working after deployment
 const base = import.meta.env.BASE_URL;
 
 /**
- * Video gallery, read from data/videos.js. preload="metadata" loads only
+ * Video gallery, read from data/videos.json. preload="metadata" loads only
  * each video's length and first frame, so the page opens quickly.
  */
-
 function VideoGallery() {
+  const { data: videos, error } = useJsonData("videos");
+  if (!videos) return <DataStatus error={error} />;
+
   return (
     <section>
       <h1>Video Gallery</h1>
