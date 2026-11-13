@@ -149,7 +149,7 @@ h1 {
   justify-content: center;
   flex-wrap: wrap;
   gap: 1rem;
-  margin-top: auto; /* keeps buttons at the bottom */
+  margin-top: 1.5rem;
 }
 
 /* Buttons */
@@ -883,6 +883,7 @@ h1 {
   font-size: 0.85rem;
   margin-top: 0.6rem;
 }
+
 /* Blog search and filter */
 .blog-toolbar {
   display: flex;
@@ -914,4 +915,102 @@ h1 {
   color: var(--muted);
   font-size: 0.85rem;
   margin-bottom: 1rem;
+}
+
+/* Site-wide search box (Navbar, Home and Search pages) */
+.search-box input {
+  width: 180px;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font: inherit;
+}
+
+.search-box input:focus {
+  outline: 2px solid var(--accent);
+}
+
+.search-box--large {
+  width: 100%;
+  max-width: 480px;
+  margin: 1rem auto 0;
+}
+
+.search-box--large input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-color: #c9ced8;
+}
+
+/* Search results */
+.search-results {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.search-result {
+  display: block;
+  background: #ffffff;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 0.2s;
+}
+
+.search-result:hover {
+  border-color: var(--accent);
+}
+
+.search-section {
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.search-result h2 {
+  color: var(--primary);
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+/* Navbar search: an icon that opens a small search box */
+.nav-links {
+  align-items: center; /* lines up the icon with the menu links */
+}
+
+.nav-search-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--nav-text);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.nav-search-toggle:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.nav-search input {
+  width: 160px;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 0.9rem;
+}
+
+.nav-search input:focus {
+  outline: 2px solid var(--accent);
 }

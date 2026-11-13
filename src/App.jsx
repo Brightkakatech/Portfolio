@@ -18,6 +18,7 @@ const Blog = lazy(() => import("./pages/Blog"));
 const Messages = lazy(() => import("./pages/Messages"));
 const Readme = lazy(() => import("./pages/Readme"));
 const SignIn = lazy(() => import("./pages/SignIn"));
+const Search = lazy(() => import("./pages/Search"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 /**
@@ -46,6 +47,7 @@ function App() {
               <Route path="/messages" element={<Messages />} />
               <Route path="/readme" element={<Readme />} />
               <Route path="/signin" element={<SignIn />} />
+              <Route path="/search" element={<Search />} />
               {/* Any other address shows the 404 page; this must stay last */}
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -1,5 +1,6 @@
-import AuthButton from "./AuthButton";
 import { NavLink } from "react-router-dom";
+import AuthButton from "./AuthButton";
+import NavSearch from "./NavSearch";
 
 // One list of all pages in the menu – add or remove a page here and the menu updates
 // (the Readme page is linked from the Footer instead)
@@ -17,8 +18,8 @@ const links = [
 /**
  * Main menu, built from the links list above. NavLink highlights the page
  * the visitor is on; "end" stops Home from staying highlighted on every page.
+ * The search icon and the sign-in button sit at the right-hand end.
  */
-
 function Navbar() {
   return (
     <header className="navbar">
@@ -32,6 +33,7 @@ function Navbar() {
             {link.label}
           </NavLink>
         ))}
+        <NavSearch />
         <AuthButton />
       </nav>
     </header>

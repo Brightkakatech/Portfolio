@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
  * Landing page: name, tagline, a short introduction and a call to action
  * that leads visitors to the Messages page.
  */
-
 function Home() {
   return (
     <section className="hero">

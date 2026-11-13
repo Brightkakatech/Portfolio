@@ -8,6 +8,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDocs,
   onSnapshot,
   orderBy,
   query,
@@ -17,37 +18,52 @@ import { auth } from "./firebase";
 import { db } from "./db";
 
 const postsRef = collection(db, "posts");
+const newestFirst = query(postsRef, orderBy("date", "desc"));
+
+/**
+ * Turns a Firestore document into the plain post object the site uses.
+ * Shared by watchPosts and fetchPosts so both return the same shape.
+ * @param {import("firebase/firestore").QueryDocumentSnapshot} post
+ */
+function toPost(post) {
+  // "estimate" gives a date for a post the server hasn't stamped yet
+  const data = post.data({ serverTimestamps: "estimate" });
+  return {
+    id: post.id,
+    title: data.title,
+    content: data.content,
+    date: data.date.toDate().toISOString(),
+    authorId: data.authorId,
+    authorName: data.authorName,
+  };
+}
 
 /**
  * Listens to all posts, newest first. onChange runs straight away and again
  * whenever a post is published or deleted, by anyone.
- * @param {(posts: Array<{id: string, title: string, content: string, date: string, authorId: string, authorName: string}>) => void} onChange
+ * @param {(posts: Array<object>) => void} onChange
  * @param {(error: string) => void} onError
  * @returns {() => void} A function that stops listening.
  */
 export function watchPosts(onChange, onError) {
-  const newestFirst = query(postsRef, orderBy("date", "desc"));
-
   return onSnapshot(
     newestFirst,
-    (snapshot) => {
-      onChange(
-        snapshot.docs.map((post) => {
-          // "estimate" gives a date for a post the server hasn't stamped yet
-          const data = post.data({ serverTimestamps: "estimate" });
-          return {
-            id: post.id,
-            title: data.title,
-            content: data.content,
-            date: data.date.toDate().toISOString(),
-            authorId: data.authorId,
-            authorName: data.authorName,
-          };
-        }),
-      );
-    },
+    (snapshot) => onChange(snapshot.docs.map(toPost)),
     () => onError("The posts could not be loaded."),
   );
+}
+
+/**
+ * Reads all posts once, newest first. Used by the site-wide search.
+ * @returns {Promise<{ok: boolean, posts: Array<object>}>}
+ */
+export async function fetchPosts() {
+  try {
+    const snapshot = await getDocs(newestFirst);
+    return { ok: true, posts: snapshot.docs.map(toPost) };
+  } catch {
+    return { ok: false, posts: [] };
+  }
 }
 
 /**
