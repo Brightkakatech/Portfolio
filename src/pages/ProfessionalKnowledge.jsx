@@ -1,5 +1,6 @@
 import { useJsonData } from "../hooks/useJsonData";
 import DataStatus from "../components/DataStatus";
+import GitHubRepos from "../components/GitHubRepos";
 
 /**
  * Skills and experience, read from data/knowledge.json. Reuses the Education
@@ -55,6 +56,8 @@ function ProfessionalKnowledge() {
           </article>
         ))}
       </div>
+      {/* ---------- Live projects from the GitHub API ---------- */}
+      <GitHubRepos />
     </section>
   );
 }
