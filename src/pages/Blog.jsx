@@ -1,60 +1,67 @@
-import { useState, useEffect } from "react";
-import starterPosts from "../data/posts";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { watchPosts, publishPost, deletePost } from "../services/posts";
+import { formatDate } from "../utils/format";
+import { filterPosts, listAuthors } from "../utils/filterPosts"; // NEW
 
-// Name under which posts are saved in the browser
-const STORAGE_KEY = "blog-posts";
-
-// Load saved posts if there are any; otherwise use the starter posts
-function loadPosts() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : starterPosts;
-  } catch {
-    return starterPosts;
-  }
-}
-
-// Turns "2026-09-28" into "28 September 2026"
-function formatDate(date) {
-  return new Date(date).toLocaleDateString("en-IE", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-}
-
+/**
+ * Community blog. Everyone can read the posts and search or filter them;
+ * signed-in users with a verified email can publish. Authors can delete
+ * their own posts and the owner can delete any. firestore.rules enforces
+ * the same rules on the server.
+ */
 function Blog() {
-  const [posts, setPosts] = useState(loadPosts);
+  const { user, isOwner } = useAuth();
+  const [posts, setPosts] = useState(null); // null until the first load
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [error, setError] = useState("");
+  const [publishing, setPublishing] = useState(false);
+  const [search, setSearch] = useState(""); // NEW: the search box text
+  const [author, setAuthor] = useState("all"); // NEW: the chosen author
 
-  // Save posts to the browser whenever they change
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
-  }, [posts]);
+  // Listen for posts while the page is open, so new posts appear live
+  useEffect(() => watchPosts(setPosts, setError), []);
 
-  // Runs when the form is submitted
-  function handleSubmit(event) {
-    event.preventDefault(); // stop the page from reloading
+  // Only signed-in users with a verified email may write
+  const canWrite = user?.emailVerified;
+
+  // NEW: worked out again on every render, so the list updates as you type
+  const allPosts = posts ?? [];
+  const visiblePosts = filterPosts(allPosts, search, author);
+  const authors = listAuthors(allPosts);
+
+  // Runs when the form is submitted: publishes the post unless the title or text is empty
+  async function handleSubmit(event) {
+    event.preventDefault(); // stop the page from reloading, so React can handle the post instead
 
     // Ignore empty posts
     if (!title.trim() || !content.trim()) return;
 
-    const newPost = {
-      id: Date.now(), // unique number based on the current time
-      title: title.trim(),
-      date: new Date().toISOString().slice(0, 10), // today, e.g. 2026-09-28
-      content: content.trim(),
-    };
+    setPublishing(true);
+    const result = await publishPost(title.trim(), content.trim());
+    setPublishing(false);
 
-    setPosts([newPost, ...posts]); // newest post first
+    if (!result.ok) {
+      setError(result.error);
+      return;
+    }
+
+    setError("");
     setTitle("");
     setContent("");
   }
 
-  // Removes the post with the matching id
-  function handleDelete(id) {
-    setPosts(posts.filter((post) => post.id !== id));
+  // Authors may delete their own posts; the owner may delete any
+  function canDelete(post) {
+    return isOwner || post.authorId === user?.uid;
+  }
+
+  async function handleDelete(id) {
+    if (!window.confirm("Delete this post?")) return;
+    const result = await deletePost(id);
+    if (!result.ok) setError(result.error);
   }
 
   return (
@@ -62,49 +69,106 @@ function Blog() {
       <h1>Blog</h1>
       <p className="page-intro">Thoughts, lessons and updates.</p>
 
-      {/* ---------- Write a new post ---------- */}
-      <form className="blog-form" onSubmit={handleSubmit}>
-        <h2>Write a post</h2>
+      {/* ---------- Write a new post (signed-in, verified users only) ---------- */}
+      {canWrite ? (
+        <form className="blog-form" onSubmit={handleSubmit}>
+          <h2>Write a post</h2>
 
-        <label htmlFor="post-title">Title</label>
-        <input
-          id="post-title"
-          type="text"
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
-          placeholder="Post title"
-        />
+          <label htmlFor="post-title">Title</label>
+          <input
+            id="post-title"
+            type="text"
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+            placeholder="Post title"
+            maxLength={150}
+          />
 
-        <label htmlFor="post-content">Post</label>
-        <textarea
-          id="post-content"
-          rows="5"
-          value={content}
-          onChange={(event) => setContent(event.target.value)}
-          placeholder="Write your post here..."
-        />
+          <label htmlFor="post-content">Post</label>
+          <textarea
+            id="post-content"
+            rows="5"
+            value={content}
+            onChange={(event) => setContent(event.target.value)}
+            placeholder="Write your post here..."
+            maxLength={10000}
+          />
 
-        <button type="submit" className="btn btn-primary">
-          Publish
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={publishing}
+          >
+            {publishing ? "Publishing…" : "Publish"}
+          </button>
+        </form>
+      ) : (
+        <p className="page-intro">
+          <Link to="/signin">{user ? "Verify your email" : "Sign in"}</Link> to
+          write a post.
+        </p>
+      )}
+
+      {error && (
+        <p className="notice notice-error" role="alert">
+          {error}
+        </p>
+      )}
+
+      {/* ---------- NEW: Search and filter ---------- */}
+      {allPosts.length > 0 && (
+        <>
+          <div className="blog-toolbar">
+            <input
+              type="search"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Search posts"
+              aria-label="Search posts"
+            />
+            <select
+              value={author}
+              onChange={(event) => setAuthor(event.target.value)}
+              aria-label="Filter by author"
+            >
+              <option value="all">All authors</option>
+              {authors.map((name) => (
+                <option key={name} value={name}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <p className="blog-count" role="status">
+            Showing {visiblePosts.length} of {allPosts.length} posts
+          </p>
+        </>
+      )}
 
       {/* ---------- List of posts ---------- */}
       <div className="blog-list">
-        {posts.length === 0 ? (
+        {posts === null ? (
+          <p className="page-intro">Loading posts…</p>
+        ) : allPosts.length === 0 ? (
           <p className="page-intro">No posts yet.</p>
+        ) : visiblePosts.length === 0 ? (
+          <p className="page-intro">No posts match your search.</p>
         ) : (
-          posts.map((post) => (
+          visiblePosts.map((post) => (
             <article className="blog-post" key={post.id}>
               <h2>{post.title}</h2>
-              <p className="blog-date">{formatDate(post.date)}</p>
+              <p className="blog-date">
+                {formatDate(post.date)} · {post.authorName}
+              </p>
               <p className="blog-content">{post.content}</p>
-              <button
-                className="btn-delete"
-                onClick={() => handleDelete(post.id)}
-              >
-                Delete
-              </button>
+              {canDelete(post) && (
+                <button
+                  className="btn-delete"
+                  onClick={() => handleDelete(post.id)}
+                >
+                  Delete
+                </button>
+              )}
             </article>
           ))
         )}

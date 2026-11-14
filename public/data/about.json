@@ -1,0 +1,24 @@
+{
+  "photo": "profile.jpg",
+  "intro": "A Software Engineer Masters Student",
+  "story": [
+    "Originally born in Nigeria, currently living in Ireland",
+    "Currently studing MSc. Software Engineering, at University of Limerick, Ireland",
+    "Want to design and build industry sophisticated systems, strong and realiable"
+  ],
+  "highlights": [
+    {
+      "title": "Currently",
+      "text": "Postgraduate student, University of Limerick"
+    },
+    {
+      "title": "Focus",
+      "text": "Software engineering and web development"
+    },
+    {
+      "title": "Based in",
+      "text": "Carlow, Ireland"
+    }
+  ],
+  "interests": ["Football", "Golf", "Traveling", "Programming"]
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "type": "file",
+    "file": "Outdoor-climbing.mp4",
+    "title": "Climbing",
+    "description": "Climbing for a prize"
+  },
+  {
+    "type": "file",
+    "file": "Christmas-gift.mp4",
+    "title": "A Christmas Gift",
+    "description": "Christmas Season"
+  },
+  {
+    "type": "file",
+    "file": "Santa.mp4",
+    "title": "Santa climbing",
+    "description": "Ever seen Santa rope climbing?"
+  }
+]
