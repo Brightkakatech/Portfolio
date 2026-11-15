@@ -1,0 +1,181 @@
+import { useEffect, useState, type SyntheticEvent } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { watchPosts, publishPost, deletePost } from "../services/posts";
+import { formatDate } from "../utils/format";
+import { filterPosts, listAuthors } from "../utils/filterPosts";
+import type { Post } from "../types";
+
+/**
+ * Community blog. Everyone can read the posts and search or filter them;
+ * signed-in users with a verified email can publish. Authors can delete
+ * their own posts and the owner can delete any. firestore.rules enforces
+ * the same rules on the server.
+ */
+function Blog() {
+  const { user, isOwner } = useAuth();
+  const [posts, setPosts] = useState<Post[] | null>(null); // null until the first load
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [error, setError] = useState("");
+  const [publishing, setPublishing] = useState(false);
+  const [search, setSearch] = useState(""); // the search box text
+  const [author, setAuthor] = useState("all"); // the chosen author
+
+  // Listen for posts while the page is open, so new posts appear live
+  useEffect(() => watchPosts(setPosts, setError), []);
+
+  // Only signed-in users with a verified email may write
+  const canWrite = user?.emailVerified;
+
+  // Worked out again on every render, so the list updates as you type
+  const allPosts = posts ?? [];
+  const visiblePosts = filterPosts(allPosts, search, author);
+  const authors = listAuthors(allPosts);
+
+  // Runs when the form is submitted: publishes the post unless the title or text is empty
+  async function handleSubmit(event: SyntheticEvent<HTMLFormElement>) {
+    event.preventDefault(); // stop the page from reloading, so React can handle the post instead
+
+    // Ignore empty posts
+    if (!title.trim() || !content.trim()) return;
+
+    setPublishing(true);
+    const result = await publishPost(title.trim(), content.trim());
+    setPublishing(false);
+
+    if (!result.ok) {
+      setError(result.error);
+      return;
+    }
+
+    setError("");
+    setTitle("");
+    setContent("");
+  }
+
+  // Authors may delete their own posts; the owner may delete any
+  function canDelete(post: Post) {
+    return isOwner || post.authorId === user?.uid;
+  }
+
+  async function handleDelete(id: string) {
+    if (!window.confirm("Delete this post?")) return;
+    const result = await deletePost(id);
+    if (!result.ok) setError(result.error);
+  }
+
+  return (
+    <section>
+      <h1>Blog</h1>
+      <p className="page-intro">Thoughts, lessons and updates.</p>
+
+      {/* ---------- Write a new post (signed-in, verified users only) ---------- */}
+      {canWrite ? (
+        <form className="blog-form" onSubmit={handleSubmit}>
+          <h2>Write a post</h2>
+
+          <label htmlFor="post-title">Title</label>
+          <input
+            id="post-title"
+            type="text"
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+            placeholder="Post title"
+            maxLength={150}
+          />
+
+          <label htmlFor="post-content">Post</label>
+          <textarea
+            id="post-content"
+            rows={5}
+            value={content}
+            onChange={(event) => setContent(event.target.value)}
+            placeholder="Write your post here..."
+            maxLength={10000}
+          />
+
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={publishing}
+          >
+            {publishing ? "Publishing…" : "Publish"}
+          </button>
+        </form>
+      ) : (
+        <p className="page-intro">
+          <Link to="/signin">{user ? "Verify your email" : "Sign in"}</Link> to
+          write a post.
+        </p>
+      )}
+
+      {error && (
+        <p className="notice notice-error" role="alert">
+          {error}
+        </p>
+      )}
+
+      {/* ---------- Search and filter ---------- */}
+      {allPosts.length > 0 && (
+        <>
+          <div className="blog-toolbar">
+            <input
+              type="search"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Search posts"
+              aria-label="Search posts"
+            />
+            <select
+              value={author}
+              onChange={(event) => setAuthor(event.target.value)}
+              aria-label="Filter by author"
+            >
+              <option value="all">All authors</option>
+              {authors.map((name) => (
+                <option key={name} value={name}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <p className="blog-count" role="status">
+            Showing {visiblePosts.length} of {allPosts.length} posts
+          </p>
+        </>
+      )}
+
+      {/* ---------- List of posts ---------- */}
+      <div className="blog-list">
+        {posts === null ? (
+          <p className="page-intro">Loading posts…</p>
+        ) : allPosts.length === 0 ? (
+          <p className="page-intro">No posts yet.</p>
+        ) : visiblePosts.length === 0 ? (
+          <p className="page-intro">No posts match your search.</p>
+        ) : (
+          visiblePosts.map((post) => (
+            <article className="blog-post" key={post.id}>
+              <h2>{post.title}</h2>
+              <p className="blog-date">
+                {formatDate(post.date)} · {post.authorName}
+              </p>
+              <p className="blog-content">{post.content}</p>
+              {canDelete(post) && (
+                <button
+                  className="btn-delete"
+                  onClick={() => handleDelete(post.id)}
+                >
+                  Delete
+                </button>
+              )}
+            </article>
+          ))
+        )}
+      </div>
+    </section>
+  );
+}
+
+export default Blog;
