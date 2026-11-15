@@ -1,9 +1,13 @@
-# Automatically builds the site and publishes it to GitHub Pages
-# every time changes are pushed to the main branch.
-name: Deploy to GitHub Pages
+# CI/CD pipeline for the portfolio.
+# On every pull request into main, and on every push to main, the "check"
+# job runs all quality checks. The site is only deployed to GitHub Pages
+# from main, and only if every check has passed.
+name: CI and deploy
 
 on:
   push:
+    branches: [main]
+  pull_request:
     branches: [main]
   workflow_dispatch: # also allows a manual run from the Actions tab
 
@@ -12,12 +16,14 @@ permissions:
   pages: write
   id-token: write
 
+# A newer run for the same branch or pull request cancels the older one
 concurrency:
-  group: pages
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build:
+  check:
+    name: Check (format, lint, types, tests, build)
     runs-on: ubuntu-latest
     steps:
       - name: Get the code
@@ -32,19 +38,36 @@ jobs:
       - name: Install packages
         run: npm ci
 
+      - name: Check formatting (Prettier)
+        run: npm run format:check
+
+      - name: Lint (ESLint)
+        run: npm run lint
+
+      - name: Type check (TypeScript)
+        run: npm run typecheck
+
+      - name: Unit tests (Vitest)
+        run: npm test
+
       - name: Build the site
         run: npm run build
 
+      # The built site is only prepared for publishing on main, not on pull requests
       - name: Configure GitHub Pages
+        if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v5
 
       - name: Upload the built site
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
 
   deploy:
-    needs: build
+    name: Deploy to GitHub Pages
+    needs: check # only runs if every check passed
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
