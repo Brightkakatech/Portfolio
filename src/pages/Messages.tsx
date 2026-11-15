@@ -7,6 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import { sendMessage } from "../services/messages";
 import { loadList, saveList } from "../services/storage";
 import { isValidMessage } from "../services/validators";
+import { isValidEmail } from "../utils/contact";
 import type { Notice } from "../types";
 
 // Name under which visitors' own sent messages are kept in their browser
@@ -35,9 +36,14 @@ function Messages() {
    * Checks a new message, sends it to the owner, and keeps a copy here.
    * @param name - The sender's name.
    * @param text - The message.
+   * @param email - Optional; checked only if the visitor typed one.
    * @returns True if the message was sent.
    */
-  async function handleSend(name: string, text: string): Promise<boolean> {
+  async function handleSend(
+    name: string,
+    text: string,
+    email: string,
+  ): Promise<boolean> {
     if (!name.trim() || !text.trim()) {
       setNotice({
         type: "error",
@@ -46,7 +52,12 @@ function Messages() {
       return false;
     }
 
-    const result = await sendMessage(name.trim(), text.trim());
+    if (email.trim() && !isValidEmail(email)) {
+      setNotice({ type: "error", text: "Please check your email address." });
+      return false;
+    }
+
+    const result = await sendMessage(name.trim(), text.trim(), email.trim());
     if (!result.ok) {
       setNotice({ type: "error", text: result.error });
       return false;
@@ -100,8 +111,9 @@ function Messages() {
 
         <div className="chat-footer">
           <p className="chat-note">
-            Messages are sent privately to me. Only you can see your own
-            messages here, in this browser.
+            Messages are sent privately to me. Your email is optional and is
+            only used to reply to you. Only you can see your own messages here,
+            in this browser.
           </p>
           {messages.length > 0 && (
             <button className="btn-delete" onClick={handleClear}>

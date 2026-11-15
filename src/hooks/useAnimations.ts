@@ -10,38 +10,6 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 const MOTION_OK = "(prefers-reduced-motion: no-preference)";
 
 /**
- * Slides elements in one after another when a page opens.
- * useGSAP removes the animation automatically when the page closes.
- * @param selector - Which elements to animate, inside the container.
- * @returns A ref to attach to the container element.
- */
-export function useEntrance<E extends HTMLElement = HTMLElement>(
-  selector: string,
-): RefObject<E | null> {
-  const containerRef = useRef<E>(null);
-
-  useGSAP(
-    () => {
-      if (!containerRef.current) return;
-      const mm = gsap.matchMedia();
-      mm.add(MOTION_OK, () => {
-        gsap.from(gsap.utils.toArray(selector, containerRef.current), {
-          opacity: 0,
-          y: 20,
-          duration: 0.7,
-          ease: "power2.out",
-          stagger: 0.15, // each element starts 0.15s after the previous one
-        });
-      });
-      return () => mm.revert();
-    },
-    { scope: containerRef },
-  );
-
-  return containerRef;
-}
-
-/**
  * Fades elements up as they scroll into view, using GSAP's ScrollTrigger.
  * Each element animates once, the first time it appears.
  * @param selector - Which elements to animate, inside the container.
