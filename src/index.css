@@ -75,6 +75,21 @@ body {
   color: var(--accent-text);
 }
 
+/* Menu button (☰): hidden on wide screens, shown on phones below */
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--nav-text);
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 1.25rem;
+  line-height: 1;
+  padding: 0.35rem 0.65rem;
+  cursor: pointer;
+}
+
 /* Sign in / Sign out button at the end of the menu */
 .btn-auth {
   text-decoration: none;
@@ -777,15 +792,20 @@ h1 {
 /* Phones */
 @media (max-width: 700px) {
   .navbar {
-    justify-content: center;
-    padding: 1rem;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
   }
-  .brand {
-    width: 100%;
-    text-align: center;
+  /* The menu collapses behind the ☰ button and opens as a column */
+  .nav-toggle {
+    display: flex;
   }
   .nav-links {
-    justify-content: center;
+    display: none;
+    width: 100%;
+    flex-direction: column;
+  }
+  .nav-links.open {
+    display: flex;
   }
   .hero-name {
     font-size: 2rem;
@@ -1013,4 +1033,84 @@ h1 {
 
 .nav-search input:focus {
   outline: 2px solid var(--accent);
+}
+
+/* Home entrance: the name, tagline and button slide in.
+   A small CSS animation replaces GSAP here, so GSAP is not downloaded on
+   the first visit. The introduction is not animated, so the largest text
+   appears straight away. */
+@keyframes hero-enter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.hero-enter {
+  animation: hero-enter 0.7s ease-out both;
+}
+
+.hero-tagline.hero-enter {
+  animation-delay: 0.15s;
+}
+
+.hero-buttons.hero-enter {
+  animation-delay: 0.3s;
+}
+
+/* Respect visitors who ask their device to reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .hero-enter {
+    animation: none;
+  }
+}
+
+/* Messages: optional email box in the form */
+.chat-email {
+  flex: 0 1 230px;
+}
+
+/* Inbox: one white card per message, with Reply and Delete buttons */
+.inbox-item {
+  background: #ffffff;
+  border-left: 4px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.inbox-item .chat-meta {
+  color: var(--muted);
+  opacity: 1;
+  overflow-wrap: anywhere;
+}
+
+.inbox-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.inbox-actions .btn-delete {
+  margin-top: 0;
+}
+
+.btn-reply {
+  border: 1px solid var(--primary);
+  border-radius: 6px;
+  color: var(--primary);
+  font-size: 0.85rem;
+  padding: 0.3rem 0.8rem;
+  text-decoration: none;
+}
+
+.btn-reply:hover {
+  background: var(--primary);
+  color: #ffffff;
 }

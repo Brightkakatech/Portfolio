@@ -23,10 +23,21 @@ const messagesRef = collection(db, "messages");
  * Firebase's server, so it cannot be faked; the rules reject any other time.
  * @param name - Up to 50 characters.
  * @param text - Up to 1000 characters.
+ * @param email - Optional, so the owner can reply; left out when empty.
  */
-export async function sendMessage(name: string, text: string): Promise<Result> {
+export async function sendMessage(
+  name: string,
+  text: string,
+  email = "",
+): Promise<Result> {
   try {
-    await addDoc(messagesRef, { name, text, time: serverTimestamp() });
+    await addDoc(messagesRef, {
+      name,
+      text,
+      time: serverTimestamp(),
+      // Only store an email field when the visitor gave one
+      ...(email ? { email } : {}),
+    });
     return { ok: true };
   } catch {
     return {
@@ -59,6 +70,7 @@ export function watchInbox(
             name: data.name as string,
             text: data.text as string,
             time: (data.time as Timestamp).toDate().toISOString(),
+            email: data.email as string | undefined,
           };
         }),
       );

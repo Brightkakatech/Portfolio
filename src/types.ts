@@ -36,6 +36,7 @@ export interface InboxMessage {
   name: string;
   text: string;
   time: string; // ISO date string
+  email?: string; // optional: only if the visitor wants a reply
 }
 
 /** A visitor's own copy of a message they sent, kept in their browser. */

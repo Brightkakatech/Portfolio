@@ -15,12 +15,20 @@ service cloud.firestore {
       return value is string && value.size() > 0 && value.size() <= max;
     }
 
+    // An optional email (so the owner can reply) must look like an address
+    function hasValidEmail(data) {
+      return !("email" in data)
+        || (isText(data.email, 100)
+          && data.email.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"));
+    }
+
     // Messages: anyone may send one; only the owner may read or delete them
     match /messages/{messageId} {
-      allow create: if request.resource.data.keys().hasOnly(["name", "text", "time"])
+      allow create: if request.resource.data.keys().hasOnly(["name", "text", "time", "email"])
         && isText(request.resource.data.name, 50)
         && isText(request.resource.data.text, 1000)
-        && request.resource.data.time == request.time;
+        && request.resource.data.time == request.time
+        && hasValidEmail(request.resource.data);
       allow read, delete: if isOwner();
     }
 
