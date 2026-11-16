@@ -20,6 +20,10 @@ The site shows who I am, my education, my skills, my projects and my interests, 
 - **Live GitHub projects:** the Professional Knowledge page shows my latest repositories, loaded from the GitHub API
 - **Animations:** cards fade in as you scroll (GSAP), and the Home page has a short entrance animation. Both are switched off for visitors who ask their device to reduce motion
 - **Phone friendly:** on small screens the menu folds behind a ☰ button
+- **Dark and light mode:** a sun/moon button in the menu; the site follows the device setting until the visitor chooses, and remembers the choice
+- **Home page:** typewriter line with my roles, a Download CV button, and a "Right now in Limerick" card with an analogue clock, the time difference from the visitor, and live weather from the Open-Meteo API
+- **Project filter:** language chips filter my GitHub projects; each skill links to the site search
+- **Small touches:** press "/" anywhere to search, a back-to-top button on long pages, reading time on blog posts, and GitHub, LinkedIn and Medium icons in the footer
 
 ## What I used
 
@@ -64,9 +68,9 @@ The site shows who I am, my education, my skills, my projects and my interests, 
     ├── src/
     │   ├── components/                parts shared by pages (Navbar, search, Inbox, ...)
     │   ├── context/                   who is signed in, shared with every page
-    │   ├── hooks/                     reusable logic (loading JSON, animations)
+    │   ├── hooks/                     reusable logic (loading JSON, animations, typewriter)
     │   ├── pages/                     one file for each page
-    │   ├── services/                  talking to Firebase, GitHub and the browser storage
+    │   ├── services/                  talking to Firebase, GitHub, Open-Meteo and the browser storage
     │   ├── utils/                     small helpers with their unit tests (*.test.ts)
     │   ├── types.ts                   the shapes of all the data, used everywhere
     │   ├── App.tsx                    connects each web address to its page
@@ -87,7 +91,7 @@ The site shows who I am, my education, my skills, my projects and my interests, 
 
 **Security on the server, not just in the browser.** Buttons can be hidden in the browser, but anyone can get around the interface. So `firestore.rules` checks every request on Firebase's servers: only I can read messages, only signed-in users with a verified email can post, and authors can only delete their own posts. The rules also check the length and shape of the data and use the server's own clock for dates.
 
-**Lazy loading.** Each page is downloaded only when it is first opened, and the database code only loads on the pages that need it. This cut the code downloaded on the first visit by about 62%.
+**Lazy loading.** Each page is downloaded only when it is first opened, and the database code only loads on the pages that need it. This cut the code downloaded on the first visit by about 61%.
 
 **HashRouter.** GitHub Pages only serves plain files, so with normal addresses, refreshing a page like /about would give a 404 error. With HashRouter the addresses look like /#/about and keep working. `public/404.html` also catches addresses typed without the #.
 
@@ -102,7 +106,7 @@ When a pull request is merged, the same checks run again on `main`, and the site
 ## Version history
 
 - **Phase 1 (October 2026):** first version with nine pages, navigation, styling and automatic deployment
-- **Phase 2 (November 2026):** peer review fixes, TypeScript, Firebase sign-in and database, private Inbox with email replies, community blog, site-wide search and blog filter, GitHub API, JSON content, lazy loading, GSAP animations, phone menu, unit tests, CI/CD checks, CodeQL and Dependabot
+- **Phase 2 (November 2026):** peer review fixes, TypeScript, Firebase sign-in and database, private Inbox with email replies, community blog, site-wide search and blog filter, GitHub API, JSON content, lazy loading, GSAP animations, phone menu, unit tests, CI/CD checks, CodeQL and Dependabot; then dark mode, CV download, analogue clock with live weather, project language filter, "/" search shortcut, back-to-top button, reading time and footer social icons
 
 ## Future improvements
 

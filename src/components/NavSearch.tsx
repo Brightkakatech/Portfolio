@@ -1,15 +1,35 @@
-import { useState, type SyntheticEvent } from "react";
+import { useEffect, useState, type SyntheticEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
 /**
  * Compact site-wide search for the Navbar. It shows only a magnifier icon
  * until clicked, then a small search box in the same place, so the menu
  * stays uncluttered. Enter shows the results; Escape or clicking away closes it.
+ * Pressing "/" anywhere on the site opens it too (a shortcut used by GitHub
+ * and YouTube), unless the visitor is already typing in a box.
  */
 function NavSearch() {
   const [open, setOpen] = useState(false);
   const [text, setText] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    function handleKey(event: KeyboardEvent) {
+      if (event.key !== "/" || event.ctrlKey || event.metaKey || event.altKey)
+        return;
+      // Don't steal "/" while the visitor is typing a message or a post
+      const target = event.target;
+      if (
+        target instanceof Element &&
+        target.closest("input, textarea, select, [contenteditable='true']")
+      )
+        return;
+      event.preventDefault(); // stop "/" being typed into the box that opens
+      setOpen(true);
+    }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, []);
 
   function handleSubmit(event: SyntheticEvent<HTMLFormElement>) {
     event.preventDefault(); // stop the page from reloading, so React can open the results
@@ -27,7 +47,7 @@ function NavSearch() {
         className="nav-search-toggle"
         onClick={() => setOpen(true)}
         aria-label="Search the site"
-        title="Search"
+        title="Search (press /)"
       >
         {/* Magnifier icon, drawn in code so no image file is needed */}
         <svg
