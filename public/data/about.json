@@ -1,10 +1,10 @@
 {
   "photo": "profile.jpg",
-  "intro": "A Software Engineer Masters Student",
+  "intro": "A Software Engineering Master's Student",
   "story": [
-    "Originally born in Nigeria, currently living in Ireland",
-    "Currently studing MSc. Software Engineering, at University of Limerick, Ireland",
-    "Want to design and build industry sophisticated systems, strong and realiable"
+    "Originally from Nigeria, currently living in Ireland",
+    "Currently studying for an MSc in Software Engineering at the University of Limerick, Ireland",
+    "I want to design and build sophisticated, industry-grade systems that are strong and reliable"
   ],
   "highlights": [
     {
