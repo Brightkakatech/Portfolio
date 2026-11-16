@@ -2,6 +2,7 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import AuthButton from "./AuthButton";
 import NavSearch from "./NavSearch";
+import ThemeToggle from "./ThemeToggle";
 
 // One list of all pages in the menu – add or remove a page here and the menu updates
 // (the Readme page is linked from the Footer instead)
@@ -19,7 +20,8 @@ const links = [
 /**
  * Main menu, built from the links list above. NavLink highlights the page
  * the visitor is on; "end" stops Home from staying highlighted on every page.
- * The search icon and the sign-in button sit at the right-hand end.
+ * The theme switch, the search icon and the sign-in button sit at the
+ * right-hand end.
  * On phones the links are hidden behind a menu button (☰), so the menu
  * takes one row instead of four; tapping a link closes the menu again.
  */
@@ -55,6 +57,7 @@ function Navbar() {
             {link.label}
           </NavLink>
         ))}
+        <ThemeToggle />
         <NavSearch />
         <AuthButton />
       </nav>

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useJsonData } from "../hooks/useJsonData";
 import { useRevealOnScroll } from "../hooks/useAnimations";
 import DataStatus from "../components/DataStatus";
@@ -8,6 +9,8 @@ import type { Knowledge } from "../types";
  * Skills, experience and live GitHub projects. Skills and experience are
  * read from data/knowledge.json and reuse the Education card styles so both
  * pages look consistent. Cards fade in as they scroll into view.
+ * Each skill is a link to the site search, so a visitor can see everywhere
+ * that skill appears (experience, education, blog posts).
  */
 function ProfessionalKnowledge() {
   const { data: knowledge, error } = useJsonData<Knowledge>("knowledge");
@@ -27,6 +30,9 @@ function ProfessionalKnowledge() {
 
       {/* ---------- Skills ---------- */}
       <h2 className="section-title">Skills</h2>
+      <p className="page-hint">
+        Tip: click a skill to see where I have used it.
+      </p>
       <div className="skills-grid">
         {skillGroups.map((group) => (
           <div className="skill-group" key={group.category}>
@@ -34,7 +40,12 @@ function ProfessionalKnowledge() {
             <ul className="skill-tags">
               {group.items.map((skill) => (
                 <li className="skill-tag" key={skill}>
-                  {skill}
+                  <Link
+                    to={`/search?q=${encodeURIComponent(skill)}`}
+                    className="skill-link"
+                  >
+                    {skill}
+                  </Link>
                 </li>
               ))}
             </ul>

@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { HashRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import BackToTop from "./components/BackToTop";
 
 // Lazy loading: each page's code is downloaded only when the page is first
 // opened, so the first visit is faster. The Blog and Messages pages also
@@ -54,6 +55,7 @@ function App() {
           </Suspense>
         </main>
         <Footer />
+        <BackToTop />
       </div>
     </HashRouter>
   );

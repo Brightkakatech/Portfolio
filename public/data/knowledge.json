@@ -17,11 +17,29 @@
   "skillGroups": [
     {
       "category": "Web Development",
-      "items": ["React", "JavaScript", "HTML", "CSS", "React Router"]
+      "items": [
+        "React",
+        "TypeScript",
+        "JavaScript",
+        "HTML",
+        "CSS",
+        "React Router",
+        "Firebase",
+        "GSAP"
+      ]
     },
     {
       "category": "Tools & Workflow",
-      "items": ["Git", "GitHub", "VS Code", "Vite", "npm"]
+      "items": [
+        "Git",
+        "GitHub",
+        "GitHub Actions",
+        "VS Code",
+        "Vite",
+        "npm",
+        "Vitest",
+        "ESLint"
+      ]
     },
     {
       "category": "Professional Skills",

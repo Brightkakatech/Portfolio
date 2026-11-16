@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { watchPosts, publishPost, deletePost } from "../services/posts";
 import { formatDate } from "../utils/format";
+import { readingTime } from "../utils/readingTime";
 import { filterPosts, listAuthors } from "../utils/filterPosts";
 import type { Post } from "../types";
 
@@ -159,7 +160,8 @@ function Blog() {
             <article className="blog-post" key={post.id}>
               <h2>{post.title}</h2>
               <p className="blog-date">
-                {formatDate(post.date)} · {post.authorName}
+                {formatDate(post.date)} · {post.authorName} ·{" "}
+                {readingTime(post.content)}
               </p>
               <p className="blog-content">{post.content}</p>
               {canDelete(post) && (

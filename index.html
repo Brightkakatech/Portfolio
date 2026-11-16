@@ -9,6 +9,22 @@
       content="Portfolio of Bright Amalahu, MSc Software Engineering student at the University of Limerick: projects, experience, blog and contact."
     />
     <title>Bright Amalahu | Portfolio</title>
+    <!-- Apply the saved (or device) colour theme before the page appears,
+         so dark-mode visitors never see a white flash. Same rule as
+         resolveTheme() in src/utils/theme.ts. -->
+    <script>
+      (function () {
+        var saved = null;
+        try {
+          saved = localStorage.getItem("theme");
+        } catch (e) {}
+        var dark =
+          saved === "dark" ||
+          (saved !== "light" &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.dataset.theme = dark ? "dark" : "light";
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
