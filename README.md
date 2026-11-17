@@ -19,7 +19,7 @@ The site shows who I am, my education, my skills, my projects and my interests, 
 - **Search:** a search icon in the menu searches the whole site (pages, blog posts and GitHub projects); the Blog also has its own search box and author filter
 - **Live GitHub projects:** the Projects page shows my latest repositories, loaded from the GitHub API (it got its own menu link after two testers looked for it there)
 - **Animations:** cards fade in as you scroll (GSAP), and the Home page has a short entrance animation. Both are switched off for visitors who ask their device to reduce motion
-- **Phone friendly:** on small screens the menu folds behind a ☰ button
+- **Phone friendly:** on phones and narrow laptop windows the menu folds behind a ☰ button, so it never wraps onto several rows
 - **Dark and light mode:** a sun/moon button in the menu; the site follows the device setting until the visitor chooses, and remembers the choice
 - **Home page:** typewriter line with my roles, a Download CV button, and a "Right now in Limerick" card with an analogue clock, the time difference from the visitor, the visitor's own time and time zone, and live weather from the Open-Meteo API
 - **Project filter:** language chips filter my GitHub projects; each skill links to the site search
@@ -99,17 +99,25 @@ The site shows who I am, my education, my skills, my projects and my interests, 
 
 ## How it is tested and deployed
 
-Every pull request into `main` runs a GitHub Actions workflow that checks, in order: formatting (Prettier), code quality (ESLint), types (TypeScript), unit tests (Vitest) and the production build. CodeQL also scans the code for security problems.
+Every pull request into `main` runs a GitHub Actions workflow that checks, in order: formatting (Prettier), code quality (ESLint), types (TypeScript), 52 unit tests (Vitest) and the production build. CodeQL scans the code for security problems, Dependabot watches the packages for known vulnerabilities, and secret scanning looks for keys committed by mistake.
 
 When a pull request is merged, the same checks run again on `main`, and the site is only published to GitHub Pages if every check passes. So a broken version never goes live.
+
+I also tested the site with people. Four friends in Nigeria, Ireland and Ukraine completed five tasks each on their own phones and laptops (download the CV, send a message, filter the projects, write and delete a blog post, and use search, dark mode and the clock). All 20 tasks were completed. Two testers looked for a Projects link in the menu, so I added the Projects page the same day.
 
 ## Version history
 
 - **Phase 1 (October 2026):** first version with nine pages, navigation, styling and automatic deployment
-- **Phase 2 (November 2026):** peer review fixes, TypeScript, Firebase sign-in and database, private Inbox with email replies, community blog, site-wide search and blog filter, GitHub API, JSON content, lazy loading, GSAP animations, phone menu, unit tests, CI/CD checks, CodeQL and Dependabot; then dark mode, CV download, analogue clock with live weather, project language filter, "/" search shortcut, back-to-top button, reading time and footer social icons
+- **Phase 2 (November 2026):** peer review fixes, TypeScript, Firebase sign-in and database, private Inbox with email replies, community blog, site-wide search and blog filter, GitHub API, JSON content, lazy loading, GSAP animations, phone menu, unit tests, CI/CD checks, CodeQL and Dependabot; then dark mode, CV download, analogue clock with live weather and the visitor's own time zone, project language filter, "/" search shortcut, back-to-top button, reading time and footer social icons; and finally a Projects page with its own menu link, added after user testing
 
 ## Future improvements
 
+- Editing blog posts, so authors do not have to delete and post again
 - Replies inside the site, so visitors can see my answer on the Messages page without email
+- Component and end-to-end tests for the pages, and writing tests first (test-driven development)
+- Monitoring the live site, so errors are reported automatically instead of waiting for a visitor to tell me
+- A written rollback procedure: reverting a pull request makes the pipeline redeploy the previous version
+- Reserving space for the clock card so the page never shifts while it loads
+- Updating the two Firebase-related dependency alerts once Firebase supports the fixed version
 - Turning on Dependabot's automatic update pull requests
 - Making the site installable on phones and usable offline (a PWA)
