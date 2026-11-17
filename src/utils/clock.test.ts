@@ -1,11 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
   describeDifference,
+  describeVisitorTime,
   greetingFor,
   handAngles,
   hourIn,
-  timeIn,
   offsetMinutes,
+  timeIn,
+  timeZoneCity,
 } from "./clock";
 
 describe("greetingFor", () => {
@@ -73,5 +75,34 @@ describe("handAngles", () => {
       minute: 180,
       second: 0,
     });
+  });
+});
+
+describe("timeZoneCity", () => {
+  it("gives the city in plain words", () => {
+    expect(timeZoneCity("Africa/Lagos")).toBe("Lagos");
+    expect(timeZoneCity("America/Argentina/Buenos_Aires")).toBe("Buenos Aires");
+  });
+
+  it("gives nothing for zones without a city", () => {
+    expect(timeZoneCity("UTC")).toBe("");
+    expect(timeZoneCity("Etc/GMT+1")).toBe("");
+  });
+});
+
+describe("describeVisitorTime", () => {
+  const moment = new Date("2026-11-16T23:46:00Z");
+
+  it("shows the visitor's time and time zone", () => {
+    expect(describeVisitorTime("Africa/Lagos", moment)).toBe(
+      "Your time: 00:46 · Lagos time zone",
+    );
+    expect(describeVisitorTime("America/New_York", moment)).toBe(
+      "Your time: 18:46 · New York time zone",
+    );
+  });
+
+  it("leaves out the city when the zone has none", () => {
+    expect(describeVisitorTime("UTC", moment)).toBe("Your time: 23:46");
   });
 });

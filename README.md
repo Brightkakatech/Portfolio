@@ -21,7 +21,7 @@ The site shows who I am, my education, my skills, my projects and my interests, 
 - **Animations:** cards fade in as you scroll (GSAP), and the Home page has a short entrance animation. Both are switched off for visitors who ask their device to reduce motion
 - **Phone friendly:** on small screens the menu folds behind a ☰ button
 - **Dark and light mode:** a sun/moon button in the menu; the site follows the device setting until the visitor chooses, and remembers the choice
-- **Home page:** typewriter line with my roles, a Download CV button, and a "Right now in Limerick" card with an analogue clock, the time difference from the visitor, and live weather from the Open-Meteo API
+- **Home page:** typewriter line with my roles, a Download CV button, and a "Right now in Limerick" card with an analogue clock, the time difference from the visitor, the visitor's own time and time zone, and live weather from the Open-Meteo API
 - **Project filter:** language chips filter my GitHub projects; each skill links to the site search
 - **Small touches:** press "/" anywhere to search, a back-to-top button on long pages, reading time on blog posts, and GitHub, LinkedIn and Medium icons in the footer
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   describeDifference,
+  describeVisitorTime,
   greetingFor,
   handAngles,
   HOME_TIME_ZONE,
@@ -32,7 +33,9 @@ const MARKS = Array.from({ length: 60 }, (_, index) => index);
 /**
  * "Right now in Limerick" card on Home: an analogue clock showing my local
  * time, the date, a greeting, how far ahead or behind the visitor that is,
- * and the current weather from the Open-Meteo API.
+ * the visitor's own time and time zone (read from their device, so no
+ * permission or location data is needed), and the current weather from the
+ * Open-Meteo API.
  * The clock ticks once a second; the weather refreshes every 15 minutes.
  * Both stop when the visitor leaves Home.
  */
@@ -123,6 +126,9 @@ function LiveClock() {
         <time dateTime={now.toISOString()}>{dateFormat.format(now)}</time>
       </p>
       <p className="clock-diff">{describeDifference(difference)}</p>
+      <p className="clock-diff">
+        {describeVisitorTime(VISITOR_TIME_ZONE, now)}
+      </p>
 
       <div className="clock-weather">
         {weather === null && <p>Checking the weather…</p>}
