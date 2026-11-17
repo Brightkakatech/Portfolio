@@ -96,3 +96,30 @@ export function describeDifference(difference: number): string {
   const direction = difference > 0 ? "ahead of" : "behind";
   return `Limerick is ${amount} ${unit} ${direction} you.`;
 }
+
+/**
+ * The city in a time-zone name, in plain words,
+ * e.g. "Africa/Lagos" -> "Lagos", "America/Argentina/Buenos_Aires" ->
+ * "Buenos Aires". Zones without a city (e.g. "UTC") give "".
+ */
+export function timeZoneCity(timeZone: string): string {
+  if (!timeZone.includes("/") || timeZone.startsWith("Etc/")) return "";
+  const city = timeZone.split("/").pop() ?? "";
+  return city.replace(/_/g, " ");
+}
+
+/**
+ * The visitor's own clock time and time zone, e.g.
+ * "Your time: 00:46 · Lagos time zone". The city is the time zone's main
+ * city (all of Nigeria uses Lagos), which is why it says "time zone".
+ */
+export function describeVisitorTime(timeZone: string, date: Date): string {
+  const time = new Intl.DateTimeFormat("en-GB", {
+    timeZone,
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).format(date);
+  const city = timeZoneCity(timeZone);
+  return city ? `Your time: ${time} · ${city} time zone` : `Your time: ${time}`;
+}
