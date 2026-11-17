@@ -13,6 +13,7 @@ const Education = lazy(() => import("./pages/Education"));
 const ProfessionalKnowledge = lazy(
   () => import("./pages/ProfessionalKnowledge"),
 );
+const Projects = lazy(() => import("./pages/Projects"));
 const PictureGallery = lazy(() => import("./pages/PictureGallery"));
 const VideoGallery = lazy(() => import("./pages/VideoGallery"));
 const Blog = lazy(() => import("./pages/Blog"));
@@ -42,6 +43,7 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/education" element={<Education />} />
               <Route path="/knowledge" element={<ProfessionalKnowledge />} />
+              <Route path="/projects" element={<Projects />} />
               <Route path="/pictures" element={<PictureGallery />} />
               <Route path="/videos" element={<VideoGallery />} />
               <Route path="/blog" element={<Blog />} />

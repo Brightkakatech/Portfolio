@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { useJsonData } from "../hooks/useJsonData";
 import { useRevealOnScroll } from "../hooks/useAnimations";
 import DataStatus from "../components/DataStatus";
-import GitHubRepos from "../components/GitHubRepos";
 import type { Knowledge } from "../types";
 
 /**
@@ -73,8 +72,11 @@ function ProfessionalKnowledge() {
         ))}
       </div>
 
-      {/* ---------- Live projects from the GitHub API ---------- */}
-      <GitHubRepos />
+      {/* My GitHub projects have their own page (added after the walkthrough) */}
+      <p className="page-hint">
+        See my latest GitHub projects on the{" "}
+        <Link to="/projects">Projects page</Link>.
+      </p>
     </section>
   );
 }
