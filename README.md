@@ -12,12 +12,12 @@ The site shows who I am, my education, my skills, my projects and my interests, 
 
 ## Features
 
-- **Pages:** Home, About, Education, Professional Knowledge, Pictures Gallery, Video Gallery, Blog, Messages, Readme, Sign in, Search, and a "Page not found" page
+- **Pages:** Home, About, Education, Professional Knowledge, Projects, Pictures Gallery, Video Gallery, Blog, Messages, Readme, Sign in, Search, and a "Page not found" page
 - **Sign in:** with Google, or with an email and password (with email verification and password reset)
 - **Messages:** visitors send me a private message, with an optional email address so I can reply. Only I can read the messages, in an Inbox that updates live, with "Reply by email" and Delete buttons
 - **Community blog:** everyone can read posts; signed-in visitors with a verified email can write posts; authors can delete their own posts and I can remove any post
 - **Search:** a search icon in the menu searches the whole site (pages, blog posts and GitHub projects); the Blog also has its own search box and author filter
-- **Live GitHub projects:** the Professional Knowledge page shows my latest repositories, loaded from the GitHub API
+- **Live GitHub projects:** the Projects page shows my latest repositories, loaded from the GitHub API (it got its own menu link after two testers looked for it there)
 - **Animations:** cards fade in as you scroll (GSAP), and the Home page has a short entrance animation. Both are switched off for visitors who ask their device to reduce motion
 - **Phone friendly:** on small screens the menu folds behind a ☰ button
 - **Dark and light mode:** a sun/moon button in the menu; the site follows the device setting until the visitor chooses, and remembers the choice

@@ -11,6 +11,7 @@ const links = [
   { to: "/about", label: "About" },
   { to: "/education", label: "Education" },
   { to: "/knowledge", label: "Professional Knowledge" },
+  { to: "/projects", label: "Projects" },
   { to: "/pictures", label: "Pictures Gallery" },
   { to: "/videos", label: "Video Gallery" },
   { to: "/blog", label: "Blog" },
@@ -22,8 +23,9 @@ const links = [
  * the visitor is on; "end" stops Home from staying highlighted on every page.
  * The theme switch, the search icon and the sign-in button sit at the
  * right-hand end.
- * On phones the links are hidden behind a menu button (☰), so the menu
- * takes one row instead of four; tapping a link closes the menu again.
+ * On phones and narrow laptop windows the links are hidden behind a menu
+ * button (☰), so the menu takes one row instead of wrapping onto two or
+ * three; tapping a link closes the menu again.
  */
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
